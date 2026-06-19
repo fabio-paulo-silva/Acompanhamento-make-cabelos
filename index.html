@@ -581,21 +581,38 @@ function dataHoje() { return new Date().toISOString().split('T')[0]; }
 
 function carregarDia(er, data, callback) {
   const salvo = carregarEstado(er, data);
-  if (salvo) {
-    estado = salvo;
-    migrateEstado();
-    if (callback) callback();
+
+  // Detecta se os caixas são do formato antigo (antes da integração com Sheets)
+  const caixasAntigas = salvo && salvo.caixas.some(c => !String(c.id).startsWith('cx_sheets_'));
+  const semCaixas = !salvo || salvo.caixas.length === 0;
+
+  if (salvo) estado = salvo;
+
+  if (semCaixas || caixasAntigas) {
+    // Busca nomes atualizados do Sheets e faz merge dos pedidos existentes
+    mostrarLoadingCaixas(true);
+    carregarCaixasSheets(er, (nomes) => {
+      mostrarLoadingCaixas(false);
+      if (nomes.length === 0 && salvo) {
+        // Sheets não retornou nada — mantém estado salvo sem alterar
+        migrateEstado(); if (callback) callback(); return;
+      }
+      const pedidosAntigos = salvo ? salvo.caixas : [];
+      const novasCaixas = nomes.map((nome, i) => {
+        const antiga = pedidosAntigos.find(c => c.nome === nome);
+        return { id: 'cx_sheets_' + i, nome, pedidos: antiga ? antiga.pedidos : [] };
+      });
+      if (!estado) estado = estadoInicial(er, data, nomes);
+      else { estado.caixas = novasCaixas; estado.er = er; estado.loja = (ER_INFO[er]||{nome:er}).nome; }
+      salvarEstado();
+      migrateEstado();
+      if (callback) callback();
+    });
     return;
   }
-  // Nenhum estado salvo — busca caixas da planilha
-  mostrarLoadingCaixas(true);
-  carregarCaixasSheets(er, (nomes) => {
-    mostrarLoadingCaixas(false);
-    estado = estadoInicial(er, data, nomes);
-    salvarEstado();
-    migrateEstado();
-    if (callback) callback();
-  });
+
+  migrateEstado();
+  if (callback) callback();
 }
 
 function migrateEstado() {
