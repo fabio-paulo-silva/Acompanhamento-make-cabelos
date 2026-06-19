@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acompanhamento VD Mossoró</title>
+<style>
+:root {
+  --azul-escuro:#1F4E79;--azul-medio:#2E75B6;--azul-claro:#DBEAFE;
+  --make-cor:#C55A11;--make-fundo:#FCE4D6;
+  --cabelo-cor:#375623;--cabelo-fundo:#E2EFDA;
+  --ambos-cor:#7030A0;--ambos-fundo:#EAD1FA;
+  --hub-cor:#0EA5E9;--hub-fundo:#E0F2FE;
+  --vd-cor:#1D4ED8;--vd-fundo:#DBEAFE;
+  --hibrida-cor:#5B21B6;--hibrida-fundo:#EDE9FE;
+  --ouro:#B7791F;--prata:#6B7280;--bronze:#92400E;
+  --neutro:#F2F2F2;--bg:#F0F4F8;--branco:#FFFFFF;
+  --cinza-texto:#555;--borda:#D0DCE8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#222;font-size:14px;min-height:100vh}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+header h1{font-size:20px;font-weight:800;letter-spacing:-.3px}
+header .sub{font-size:11px;opacity:.8;margin-top:2px}
+#relogio{font-size:14px;font-weight:600;opacity:.95;text-align:right}
+
+/* ABAS */
+.tabs{display:flex;background:white;border-bottom:2px solid var(--borda);padding:0 16px}
+.tab-btn{padding:11px 20px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:600;color:#888;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab-btn.active{color:var(--azul-escuro);border-bottom-color:var(--azul-escuro)}
+.tab-btn:hover:not(.active){color:var(--azul-medio)}
+.tab-content{display:none;padding:0}
+.tab-content.active{display:block}
+
+/* SELETOR BAR */
+.seletor-bar{background:white;border-bottom:1px solid var(--borda);padding:12px 20px;display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.seletor-bar .field label{font-size:11px;color:var(--cinza-texto);font-weight:700;display:block;margin-bottom:4px}
+.seletor-bar input[type=date],.seletor-bar select{border:1.5px solid var(--borda);border-radius:8px;padding:7px 11px;font-size:13px;color:#222;background:var(--bg);cursor:pointer}
+.badge-tipo{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.badge-vd{background:var(--vd-fundo);color:var(--vd-cor)}
+.badge-hibrida{background:var(--hibrida-fundo);color:var(--hibrida-cor)}
+.badge-hub{background:var(--hub-fundo);color:var(--hub-cor)}
+
+/* ER INFO */
+.er-info{background:linear-gradient(90deg,#EFF6FF,white);border:1px solid var(--borda);border-radius:10px;padding:10px 16px;margin:12px 20px 4px;font-size:12px;display:flex;gap:16px;flex-wrap:wrap}
+.er-info strong{color:var(--azul-escuro)}
+.er-info span{color:var(--cinza-texto)}
+
+/* METAS */
+.metas-bar{background:white;margin:8px 20px;border-radius:10px;padding:12px 16px;border:1px solid var(--borda);display:flex;gap:20px;align-items:center;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.metas-bar .titulo{font-size:13px;font-weight:800;color:var(--azul-escuro)}
+.meta-item{display:flex;align-items:center;gap:8px;font-size:12px}
+.meta-item label{color:var(--cinza-texto);font-weight:600}
+.meta-item input[type=number]{width:62px;border:1.5px solid var(--borda);border-radius:6px;padding:5px 8px;font-size:13px;font-weight:700;text-align:center}
+
+/* PAINEL GERAL */
+.painel-geral{background:white;margin:8px 20px;border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.08);border:1px solid var(--borda)}
+.painel-geral .pg-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.painel-geral h2{font-size:16px;color:var(--azul-escuro);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.painel-geral .data-label{font-size:13px;color:#888;font-weight:600}
+.cards-totais{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.card-total{border-radius:12px;padding:16px;text-align:center;border:2px solid transparent;position:relative;overflow:hidden;transition:transform .15s}
+.card-total:hover{transform:translateY(-2px)}
+.card-total.ct-total{background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white}
+.card-total.ct-make{background:var(--make-fundo);border-color:var(--make-cor)15}
+.card-total.ct-cabelo{background:var(--cabelo-fundo);border-color:var(--cabelo-cor)15}
+.card-total.ct-ambos{background:var(--ambos-fundo);border-color:var(--ambos-cor)15}
+.card-total .num{font-size:40px;font-weight:900;line-height:1;display:block}
+.card-total.ct-total .num{color:white}
+.card-total.ct-make .num{color:var(--make-cor)}
+.card-total.ct-cabelo .num{color:var(--cabelo-cor)}
+.card-total.ct-ambos .num{color:var(--ambos-cor)}
+.card-total .lbl{font-size:11px;margin-top:4px;font-weight:600;opacity:.8}
+.card-total.ct-total .lbl{color:rgba(255,255,255,.85)}
+.card-total .pct{font-size:18px;font-weight:800;margin-top:2px}
+.card-total.ct-make .pct{color:var(--make-cor)}
+.card-total.ct-cabelo .pct{color:var(--cabelo-cor)}
+.card-total.ct-ambos .pct{color:var(--ambos-cor)}
+.card-total.ct-total .pct{color:rgba(255,255,255,.9)}
+
+.barra-geral{height:18px;border-radius:10px;overflow:hidden;display:flex;background:#E5E7EB;margin-bottom:8px}
+.barra-seg{height:100%;transition:width .5s ease}
+.seg-make{background:var(--make-cor)}
+.seg-cabelo{background:var(--cabelo-cor)}
+.seg-ambos{background:var(--ambos-cor)}
+.seg-sem{background:#D1D5DB}
+.legenda-barra{display:flex;gap:16px;flex-wrap:wrap}
+.legenda-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--cinza-texto)}
+.legenda-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* META PROGRESS */
+.meta-progress{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap}
+.meta-prog-item{flex:1;min-width:160px}
+.meta-prog-label{font-size:12px;color:var(--cinza-texto);margin-bottom:5px;display:flex;justify-content:space-between}
+.meta-prog-label strong{color:#222}
+.meta-prog-bar{height:12px;border-radius:8px;background:#E5E7EB;overflow:hidden;position:relative}
+.meta-prog-fill{height:100%;border-radius:8px;transition:width .5s,background .5s}
+.meta-prog-bar .meta-marker{position:absolute;top:0;height:100%;width:2px;background:rgba(0,0,0,.25)}
+
+/* RANKING */
+.ranking{background:white;margin:8px 20px;border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.08);border:1px solid var(--borda)}
+.ranking h2{font-size:16px;color:var(--azul-escuro);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+.ranking-list{display:flex;flex-direction:column;gap:8px}
+.ranking-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--borda);background:var(--bg)}
+.ranking-item.pos-1{background:linear-gradient(90deg,#FEF9C3,#FFFBEB);border-color:#FCD34D}
+.ranking-item.pos-2{background:linear-gradient(90deg,#F3F4F6,#FAFAFA);border-color:#D1D5DB}
+.ranking-item.pos-3{background:linear-gradient(90deg,#FEF3C7,#FFFBEB);border-color:#FCD34D88}
+.medal{font-size:22px;width:28px;text-align:center;flex-shrink:0}
+.rk-nome{font-weight:700;font-size:14px;flex:1}
+.rk-stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.rk-chip{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700}
+.rk-total{background:#E5E7EB;color:#374151}
+.rk-make{background:var(--make-fundo);color:var(--make-cor)}
+.rk-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
+.rk-score{font-size:18px;font-weight:900;color:var(--azul-escuro);min-width:48px;text-align:right}
+
+/* GRID CAIXAS */
+.grid-caixas{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;padding:8px 20px 24px}
+
+/* CARD CAIXA */
+.card-caixa{background:white;border-radius:14px;border:1px solid var(--borda);box-shadow:0 2px 10px rgba(0,0,0,.07);overflow:hidden}
+.card-header{background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.card-header .nome-caixa{font-weight:800;font-size:16px}
+.card-header .total-caixa{font-size:12px;background:rgba(255,255,255,.2);padding:3px 9px;border-radius:12px}
+.card-body{padding:14px 16px}
+
+/* STATS */
+.stats-caixa{display:flex;gap:8px;margin-bottom:10px}
+.stat-item{flex:1;border-radius:8px;padding:8px;text-align:center;font-size:11px;font-weight:600}
+.stat-item .val{font-size:22px;font-weight:900;display:block;line-height:1.1}
+.stat-make{background:var(--make-fundo);color:var(--make-cor)}
+.stat-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
+.stat-ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+
+.barra-caixa{height:8px;border-radius:6px;overflow:hidden;display:flex;background:#E5E7EB;margin-bottom:14px}
+
+/* FORM REGISTRO */
+.form-registro{border:2px solid var(--borda);border-radius:10px;padding:12px;background:var(--bg)}
+.form-registro .fl{font-size:11px;color:var(--cinza-texto);font-weight:700;margin-bottom:6px}
+.input-pedido{width:100%;border:1.5px solid var(--borda);border-radius:8px;padding:8px 11px;font-size:14px;font-weight:600;margin-bottom:10px}
+.input-pedido:focus{outline:none;border-color:var(--azul-medio);background:white}
+
+/* BOTÕES INCREMENTAÇÃO — GRANDES */
+.toggles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.btn-toggle{padding:14px 8px;border-radius:10px;border:2.5px solid #D1D5DB;font-size:13px;font-weight:700;cursor:pointer;background:white;color:#6B7280;transition:all .15s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.btn-toggle .ico{font-size:22px;line-height:1}
+.btn-toggle:hover{border-color:#9CA3AF;background:#F9FAFB}
+.btn-toggle.active-make{background:var(--make-fundo);color:var(--make-cor);border-color:var(--make-cor);box-shadow:0 0 0 3px rgba(197,90,17,.15)}
+.btn-toggle.active-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor);border-color:var(--cabelo-cor);box-shadow:0 0 0 3px rgba(55,86,35,.15)}
+.btn-toggle.active-ambos{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 3px rgba(112,48,160,.15)}
+
+.btn-registrar{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.3px}
+.btn-registrar:hover{opacity:.88}
+
+/* HISTÓRICO */
+.historico{max-height:150px;overflow-y:auto;margin-top:12px;padding-top:4px}
+.historico-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--borda);font-size:12px}
+.historico-item:last-child{border-bottom:none}
+.historico-hora{color:#9CA3AF;font-size:11px;min-width:38px}
+.historico-num{color:var(--azul-escuro);font-weight:700;min-width:70px;font-size:11px;font-family:monospace}
+.badge-hist{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+.badge-hist.make{background:var(--make-fundo);color:var(--make-cor)}
+.badge-hist.cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
+.badge-hist.ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+.badge-hist.sem{background:#F3F4F6;color:#9CA3AF}
+.btn-zerar-caixa{display:block;width:100%;margin-top:8px;padding:6px;background:none;border:1px solid #E5E7EB;border-radius:8px;font-size:11px;color:#D1D5DB;cursor:pointer;transition:all .15s}
+.btn-zerar-caixa:hover{border-color:#EF4444;color:#EF4444}
+
+/* ACOES */
+.acoes-gerais{display:flex;gap:10px;padding:0 20px 24px;flex-wrap:wrap}
+.btn-acao{padding:11px 20px;border-radius:10px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn-acao:hover{opacity:.85}
+.btn-wpp{background:#25D366;color:white}
+.btn-xlsx{background:var(--azul-medio);color:white}
+.btn-zerar{background:white;color:#EF4444;border:2px solid #EF4444}
+
+/* ABA CAIXAS */
+.cadastro-caixas{padding:16px 20px}
+.cadastro-caixas h2{font-size:16px;font-weight:800;color:var(--azul-escuro);margin-bottom:16px}
+.caixas-lista{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.caixa-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:white;border-radius:10px;border:1px solid var(--borda)}
+.caixa-row input[type=text]{flex:1;border:1.5px solid var(--borda);border-radius:8px;padding:7px 11px;font-size:14px;font-weight:600}
+.caixa-row input:focus{outline:none;border-color:var(--azul-medio)}
+.btn-remover-caixa{padding:6px 12px;background:none;border:1.5px solid #EF4444;border-radius:8px;color:#EF4444;font-size:12px;font-weight:700;cursor:pointer}
+.btn-add-caixa{padding:10px 20px;background:var(--azul-medio);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer}
+.btn-salvar-caixas{padding:10px 20px;background:var(--azul-escuro);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;margin-left:8px}
+.aviso-cadastro{background:#FEF3C7;border:1px solid #FCD34D;border-radius:8px;padding:10px 14px;font-size:12px;color:#92400E;margin-bottom:12px}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--azul-escuro);color:white;padding:10px 22px;border-radius:10px;font-size:13px;font-weight:700;opacity:0;transition:all .3s;pointer-events:none;z-index:9999}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* RODAPÉ */
+.rodape{text-align:center;padding:8px 0 24px;font-size:11px;color:#9CA3AF}
+
+/* CAIXA ROW — com ER */
+.caixa-row-er{font-size:11px;font-weight:700;color:var(--vd-cor);background:var(--azul-claro);padding:3px 10px;border-radius:20px;min-width:80px;text-align:center;flex-shrink:0}
+
+/* SYNC LOG */
+.sync-entry{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;font-size:12px;background:var(--neutro)}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sync-ok .sync-dot{background:#16A34A}
+.sync-err .sync-dot{background:#EF4444}
+.sync-pend .sync-dot{background:#D97706;animation:pulse 1s infinite}
+
+@media(max-width:600px){
+  .cards-totais{grid-template-columns:repeat(2,1fr)}
+  .grid-caixas{grid-template-columns:1fr}
+  .acoes-gerais{flex-direction:column}
+  .btn-acao{width:100%}
+  .card-total .num{font-size:30px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="sub">Canal VD · Grupo Boticário</div>
+    <h1>📦 Acompanhamento de Pedidos</h1>
+  </div>
+  <div id="relogio"></div>
+</header>
+
+<!-- ABAS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="setTab('acompanhamento')">📊 Acompanhamento</button>
+  <button class="tab-btn" onclick="setTab('caixas')">👤 Gerenciar Caixas</button>
+  <button class="tab-btn" onclick="setTab('config')">⚙️ Configurações</button>
+  <div style="margin-left:auto;display:flex;align-items:center;padding:0 12px;gap:8px">
+    <span id="syncStatus" style="font-size:11px;color:#9CA3AF">● Sheets desconectado</span>
+  </div>
+</div>
+
+<!-- ===== ABA ACOMPANHAMENTO ===== -->
+<div id="tab-acompanhamento" class="tab-content active">
+
+  <!-- SELETOR -->
+  <div class="seletor-bar">
+    <div class="field">
+      <label>📅 Data</label>
+      <input type="date" id="inputData">
+    </div>
+    <div class="field">
+      <label>🏪 ER / Loja</label>
+      <select id="selectER" onchange="trocarER()">
+        <optgroup label="── Venda Direta ──">
+          <option value="19595">19595 — Centro Mossoró</option>
+          <option value="12488">12488 — Extremoz</option>
+          <option value="20156">20156 — São Gonçalo do Amarante</option>
+          <option value="21270">21270 — Ceará-Mirim</option>
+          <option value="21316">21316 — Macau</option>
+          <option value="21376">21376 — Touros</option>
+          <option value="23660">23660 — ER João Câmara</option>
+          <option value="23716">23716 — São Paulo do Potengi</option>
+          <option value="21123">21123 — ER Areinha</option>
+          <option value="21124">21124 — ER Forquilha</option>
+          <option value="21125">21125 — ER Turu</option>
+          <option value="21736">21736 — ER Nevaldo Rocha</option>
+          <option value="24088">24088 — ER Parnamirim</option>
+          <option value="20836">20836 — ER Partage</option>
+          <option value="21365">21365 — São Gonçalo CE</option>
+          <option value="21411">21411 — Pecém</option>
+          <option value="21412">21412 — Trairi</option>
+          <option value="21413">21413 — Paraipaba</option>
+          <option value="21414">21414 — Pentecoste</option>
+          <option value="21415">21415 — Paracuru</option>
+          <option value="24582">24582 — ER Camocim</option>
+          <option value="24591">24591 — ER Itapipoca</option>
+          <option value="20934">20934 — Santa Inês</option>
+          <option value="20922">20922 — Gov. Nunes Freire</option>
+          <option value="20923">20923 — Maracaçumé</option>
+          <option value="20924">20924 — Carutapera</option>
+          <option value="20925">20925 — Santa Luzia do Paruá</option>
+          <option value="20932">20932 — Zé Doca</option>
+          <option value="20933">20933 — Santa Luzia do Tide</option>
+          <option value="21232">21232 — Lagoa Seca</option>
+          <option value="21559">21559 — Conde</option>
+          <option value="21561">21561 — Itabaiana</option>
+          <option value="21767">21767 — ER Centro Campina Grande</option>
+          <option value="23258">23258 — Goianinha</option>
+          <option value="23768">23768 — Nova Cruz</option>
+          <option value="23772">23772 — Canguaretama</option>
+          <option value="23775">23775 — Santa Cruz</option>
+          <option value="23776">23776 — Tangaré</option>
+          <option value="23779">23779 — Santo Antônio</option>
+        </optgroup>
+        <optgroup label="── Híbrida ──">
+          <option value="21106">23106 — HUB Natal (Híbrida)</option>
+        </optgroup>
+        <optgroup label="── HUB ──">
+          <option value="24115">24115 — HUB Mossoró</option>
+          <option value="24583">24583 — HUB Itapipoca</option>
+          <option value="24522">24522 — HUB São Luís</option>
+        </optgroup>
+      </select>
+    </div>
+    <div id="badgeER" class="badge-tipo badge-vd">🏬 Venda Direta</div>
+  </div>
+
+  <!-- INFO ER -->
+  <div class="er-info" id="erInfo">
+    <span><strong id="erNome">19595 — Centro Mossoró</strong></span>
+    <span>Regional 3 · Praça Mossoró</span>
+    <span>GVO: <strong>Ticiane Marques</strong></span>
+    <span>GCVO: <strong>Daniele Marques</strong></span>
+  </div>
+
+  <!-- METAS -->
+  <div class="metas-bar">
+    <span class="titulo">🎯 Metas do dia</span>
+    <div class="meta-item">
+      <label>💄 Make</label>
+      <input type="number" id="metaMake" value="30" min="0" max="100" onchange="salvarMeta()">
+      <span>%</span>
+    </div>
+    <div class="meta-item">
+      <label>💆 Cabelo</label>
+      <input type="number" id="metaCabelo" value="20" min="0" max="100" onchange="salvarMeta()">
+      <span>%</span>
+    </div>
+  </div>
+
+  <!-- PAINEL GERAL -->
+  <div class="painel-geral">
+    <div class="pg-header">
+      <h2>📈 Resultado Geral</h2>
+      <span class="data-label" id="labelDataGeral"></span>
+    </div>
+    <div class="cards-totais">
+      <div class="card-total ct-total">
+        <span class="num" id="gtTotal">0</span>
+        <div class="lbl">Pedidos Totais</div>
+        <div class="pct">100%</div>
+      </div>
+      <div class="card-total ct-make">
+        <span class="num" id="gtMake">0</span>
+        <div class="lbl">💄 Com Make</div>
+        <div class="pct" id="gtMakePct">0%</div>
+      </div>
+      <div class="card-total ct-cabelo">
+        <span class="num" id="gtCabelo">0</span>
+        <div class="lbl">💆 Com Cabelo</div>
+        <div class="pct" id="gtCabeloPct">0%</div>
+      </div>
+      <div class="card-total ct-ambos">
+        <span class="num" id="gtAmbos">0</span>
+        <div class="lbl">💎 Make + Cabelo</div>
+        <div class="pct" id="gtAmbosPct">0%</div>
+      </div>
+    </div>
+    <div class="barra-geral">
+      <div class="barra-seg seg-make" id="bsMake" style="width:0%"></div>
+      <div class="barra-seg seg-cabelo" id="bsCabelo" style="width:0%"></div>
+      <div class="barra-seg seg-ambos" id="bsAmbos" style="width:0%"></div>
+      <div class="barra-seg seg-sem" id="bsSem" style="width:100%"></div>
+    </div>
+    <div class="legenda-barra" style="margin-top:8px">
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--make-cor)"></div>Só Make</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--cabelo-cor)"></div>Só Cabelo</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--ambos-cor)"></div>Make+Cabelo</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:#D1D5DB"></div>Sem incrementação</div>
+    </div>
+    <div class="meta-progress">
+      <div class="meta-prog-item">
+        <div class="meta-prog-label">
+          <span>💄 Make</span>
+          <strong><span id="mpMakePct">0%</span> / meta <span id="mpMetaMake">30%</span></strong>
+        </div>
+        <div class="meta-prog-bar">
+          <div class="meta-prog-fill" id="mpMakeFill" style="width:0%;background:var(--make-cor)"></div>
+        </div>
+      </div>
+      <div class="meta-prog-item">
+        <div class="meta-prog-label">
+          <span>💆 Cabelo</span>
+          <strong><span id="mpCabeloPct">0%</span> / meta <span id="mpMetaCabelo">20%</span></strong>
+        </div>
+        <div class="meta-prog-bar">
+          <div class="meta-prog-fill" id="mpCabeloFill" style="width:0%;background:var(--cabelo-cor)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKING -->
+  <div class="ranking">
+    <h2>🏆 Ranking das Caixas</h2>
+    <div class="ranking-list" id="rankingList">
+      <div style="font-size:13px;color:#9CA3AF;text-align:center;padding:20px">Nenhum pedido registrado ainda</div>
+    </div>
+  </div>
+
+  <!-- CARDS CAIXAS -->
+  <div class="grid-caixas" id="gridCaixas"></div>
+
+  <!-- ACOES -->
+  <div class="acoes-gerais">
+    <button class="btn-acao btn-wpp" onclick="copiarWhatsApp()">📋 Copiar Resumo WhatsApp</button>
+    <button class="btn-acao btn-xlsx" onclick="exportarExcel()">📊 Exportar Planilha</button>
+    <button class="btn-acao btn-zerar" onclick="zerarTudo()">🗑 Zerar Tudo</button>
+  </div>
+
+</div><!-- /tab-acompanhamento -->
+
+<!-- ===== ABA GERENCIAR CAIXAS ===== -->
+<div id="tab-caixas" class="tab-content">
+  <div class="cadastro-caixas">
+    <h2>👤 Gerenciar Caixas</h2>
+    <div class="aviso-cadastro">
+      ⚠️ As caixas são salvas por ER. Selecione o ER desejado na aba Acompanhamento antes de editar.
+    </div>
+
+    <!-- Info ER atual -->
+    <div style="background:var(--azul-claro);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:11px;color:var(--vd-cor);font-weight:700;margin-bottom:2px">ER SELECIONADO</div>
+        <div style="font-size:15px;font-weight:800;color:var(--azul-escuro)" id="cxErAtualLabel">—</div>
+      </div>
+      <div style="margin-left:auto">
+        <span id="cxErBadge" class="badge-tipo badge-vd">🏬 Venda Direta</span>
+      </div>
+    </div>
+
+    <div style="font-size:12px;font-weight:700;color:var(--cinza-texto);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">
+      Caixas cadastradas neste ER
+    </div>
+
+    <div class="caixas-lista" id="caixasLista"></div>
+
+    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+      <button class="btn-add-caixa" onclick="adicionarCaixaForm()">+ Adicionar Caixa</button>
+      <button class="btn-salvar-caixas" onclick="salvarCaixas()">✔ Salvar Alterações</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABA CONFIGURAÇÕES ===== -->
+<div id="tab-config" class="tab-content">
+  <div class="cadastro-caixas">
+    <h2>⚙️ Configurações — Google Sheets</h2>
+
+    <div style="background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.7;color:#14532D">
+      <strong>Como configurar a sincronização automática:</strong><br>
+      1. Abra sua planilha no Google Sheets<br>
+      2. Clique em <strong>Extensões → Apps Script</strong><br>
+      3. Cole o conteúdo do arquivo <strong>script_google_apps.gs</strong><br>
+      4. Clique em <strong>Implantar → Nova implantação → App da Web</strong><br>
+      5. Configure: <em>Executar como: Eu mesmo · Quem pode acessar: Qualquer pessoa</em><br>
+      6. Copie a URL gerada e cole abaixo
+    </div>
+
+    <div style="margin-bottom:14px">
+      <label style="font-size:12px;font-weight:700;color:var(--cinza-texto);display:block;margin-bottom:6px">URL do Apps Script (Web App)</label>
+      <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/..."
+        style="width:100%;border:2px solid var(--borda);border-radius:8px;padding:10px 12px;font-size:13px;font-family:monospace">
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-salvar-caixas" onclick="salvarScriptUrl()">💾 Salvar URL</button>
+      <button class="btn-add-caixa" onclick="testarConexao()" style="background:var(--cabelo-cor)">🔌 Testar Conexão</button>
+    </div>
+
+    <div id="testeResultado" style="margin-top:14px;display:none;padding:12px 14px;border-radius:8px;font-size:13px;font-weight:600"></div>
+
+    <hr style="margin:20px 0;border:none;border-top:1px solid var(--borda)">
+
+    <div style="font-size:13px;font-weight:700;color:var(--azul-escuro);margin-bottom:10px">Status da sincronização</div>
+    <div style="display:flex;flex-direction:column;gap:8px" id="syncLog">
+      <div style="font-size:12px;color:#9CA3AF">Nenhum envio realizado ainda.</div>
+    </div>
+  </div>
+</div>
+
+<div class="rodape">Canal VD Mossoró · Grupo Boticário · <span id="rodapeHora"></span></div>
+<div id="toast"></div>
+
+<script>
+// ====================================================
+// DADOS DE REFERÊNCIA ERs
+// ====================================================
+const ER_INFO = {
+  '19595': { nome:'Centro Mossoró', praça:'Mossoró', regional:'Regional 3', gvo:'Ticiane Marques', gcvo:'Daniele Marques', tipo:'vd' },
+  '12488': { nome:'Extremoz', praça:'Litoral', regional:'Regional 1', gvo:'Carla Andrea', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '20156': { nome:'São Gonçalo do Amarante', praça:'Litoral', regional:'Regional 1', gvo:'Carla Andrea', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '21270': { nome:'Ceará-Mirim', praça:'Litoral', regional:'Regional 1', gvo:'Alessandra Ferreira', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '21316': { nome:'Macau', praça:'Regional 3', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21376': { nome:'Touros', praça:'Regional 3', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '23660': { nome:'ER João Câmara', praça:'Regional 3', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '23716': { nome:'São Paulo do Potengi', praça:'Regional 3', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '24115': { nome:'HUB Mossoró', praça:'Mossoró', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'hub' },
+  '21123': { nome:'ER Areinha', praça:'São Luís', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '21124': { nome:'ER Forquilha', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21736': { nome:'ER Nevaldo Rocha', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '24088': { nome:'ER Parnamirim', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '20836': { nome:'ER Partage', praça:'Mossoró', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21125': { nome:'ER Turu', praça:'São Luís', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '23106': { nome:'HUB Natal', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'hibrida' },
+  '24522': { nome:'HUB São Luís', praça:'São Luís', regional:'Regional 2', gvo:'Joelson Soares', gcvo:'Giovanna Diniz', tipo:'hub' },
+  '24591': { nome:'ER Itapipoca', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '24583': { nome:'HUB Itapipoca', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'hub' },
+  '24582': { nome:'ER Camocim', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21415': { nome:'Paracuru', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21414': { nome:'Pentecoste', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21413': { nome:'Paraipaba', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21412': { nome:'Trairi', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21411': { nome:'Pecém', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '21365': { nome:'São Gonçalo CE', praça:'Ceará', regional:'Regional 3', gvo:'—', gcvo:'Daniele Marques', tipo:'vd' },
+  '20934': { nome:'Santa Inês', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20922': { nome:'Gov. Nunes Freire', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20923': { nome:'Maracaçumé', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20924': { nome:'Carutapera', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20925': { nome:'Santa Luzia do Paruá', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20932': { nome:'Zé Doca', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '20933': { nome:'Santa Luzia do Tide', praça:'Maranhão', regional:'Regional 2', gvo:'—', gcvo:'—', tipo:'vd' },
+  '21232': { nome:'Lagoa Seca', praça:'Paraíba', regional:'Regional 4', gvo:'—', gcvo:'—', tipo:'vd' },
+  '21559': { nome:'Conde', praça:'Paraíba', regional:'Regional 4', gvo:'—', gcvo:'—', tipo:'vd' },
+  '21561': { nome:'Itabaiana', praça:'Paraíba', regional:'Regional 4', gvo:'—', gcvo:'—', tipo:'vd' },
+  '21767': { nome:'ER Centro Campina Grande', praça:'Paraíba', regional:'Regional 4', gvo:'Marcelle Almeida', gcvo:'Marcelle Almeida', tipo:'vd' },
+  '23258': { nome:'Goianinha', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '23768': { nome:'Nova Cruz', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '23772': { nome:'Canguaretama', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '23775': { nome:'Santa Cruz', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '23776': { nome:'Tangaré', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+  '23779': { nome:'Santo Antônio', praça:'Natal', regional:'Regional 1', gvo:'—', gcvo:'Clarissa Medeiros', tipo:'vd' },
+};
+
+const CAIXAS_DEFAULT_19595 = [
+  {id:'adriele',nome:'Adriele'},{id:'mara',nome:'Mara'},
+  {id:'maressa',nome:'Maressa'},{id:'michaelly',nome:'Michaelly'}
+];
+
+let estado = null;
+let erAtual = '19595';
+let SCRIPT_URL = '';   // URL do Google Apps Script Web App
+
+// ====================================================
+// TABS
+// ====================================================
+function setTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    const txt = b.textContent.toLowerCase();
+    b.classList.toggle('active',
+      (tab==='acompanhamento' && txt.includes('acompa')) ||
+      (tab==='caixas' && txt.includes('caixa')) ||
+      (tab==='config' && txt.includes('config'))
+    );
+  });
+  ['acompanhamento','caixas','config'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  });
+  if (tab==='caixas') renderCaixasForm();
+  if (tab==='config') {
+    const url = localStorage.getItem('vd_script_url')||'';
+    document.getElementById('scriptUrlInput').value = url;
+  }
+}
+
+// ====================================================
+// PERSISTÊNCIA
+// ====================================================
+function chave(er, data) { return `vd_${er}_${data}`; }
+function chaveCaixas(er) { return `vd_caixas_${er}`; }
+
+function getCaixasER(er) {
+  const raw = localStorage.getItem(chaveCaixas(er));
+  if (raw) return JSON.parse(raw);
+  if (er === '19595') return CAIXAS_DEFAULT_19595.map(c=>({...c}));
+  return [{id:'cx1',nome:'Caixa 1'},{id:'cx2',nome:'Caixa 2'}];
+}
+
+function salvarCaixasER(er, caixas) {
+  localStorage.setItem(chaveCaixas(er), JSON.stringify(caixas));
+}
+
+function carregarEstado(er, data) {
+  const raw = localStorage.getItem(chave(er, data));
+  return raw ? JSON.parse(raw) : null;
+}
+
+function salvarEstado() {
+  if (!estado) return;
+  localStorage.setItem(chave(erAtual, estado.data), JSON.stringify(estado));
+}
+
+function estadoInicial(er, data) {
+  const info = ER_INFO[er] || {nome:er};
+  return {
+    data, er, loja: info.nome,
+    metaMakePct: 30, metaCabeloPct: 20,
+    caixas: getCaixasER(er).map(c=>({...c, pedidos:[]}))
+  };
+}
+
+// ====================================================
+// INIT
+// ====================================================
+function inicializar() {
+  const hoje = dataHoje();
+  const inp = document.getElementById('inputData');
+  inp.value = hoje;
+  inp.addEventListener('change', () => mudarData(inp.value));
+  // Carrega URL do script salva
+  SCRIPT_URL = localStorage.getItem('vd_script_url') || '';
+  atualizarStatusSync();
+  carregarDia(erAtual, hoje);
+  renderizar();
+  setInterval(atualizarRelogio, 1000);
+  atualizarRelogio();
+  atualizarBadgeER(erAtual);
+}
+
+function dataHoje() { return new Date().toISOString().split('T')[0]; }
+
+function mudarData(data) {
+  const salvo = carregarEstado(erAtual, data);
+  if (salvo) { estado = salvo; }
+  else {
+    if (confirm(`Sem dados para ${fData(data)}. Iniciar novo acompanhamento?`)) {
+      estado = estadoInicial(erAtual, data);
+      salvarEstado();
+    } else { document.getElementById('inputData').value = estado.data; return; }
+  }
+  document.getElementById('metaMake').value = estado.metaMakePct || 30;
+  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 20;
+  renderizar();
+}
+
+function carregarDia(er, data) {
+  const salvo = carregarEstado(er, data);
+  estado = salvo || estadoInicial(er, data);
+  if (!salvo) salvarEstado();
+  document.getElementById('metaMake').value = estado.metaMakePct || 30;
+  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 20;
+}
+
+function trocarER() {
+  const er = document.getElementById('selectER').value;
+  erAtual = er;
+  atualizarBadgeER(er);
+  atualizarInfoER(er);
+  carregarDia(er, document.getElementById('inputData').value);
+  renderizar();
+}
+
+function atualizarBadgeER(er) {
+  const info = ER_INFO[er] || {tipo:'vd'};
+  const badge = document.getElementById('badgeER');
+  badge.className = 'badge-tipo';
+  if (info.tipo === 'hub') { badge.classList.add('badge-hub'); badge.textContent = '🔵 HUB'; }
+  else if (info.tipo === 'hibrida') { badge.classList.add('badge-hibrida'); badge.textContent = '🟣 Híbrida'; }
+  else { badge.classList.add('badge-vd'); badge.textContent = '🏬 Venda Direta'; }
+}
+
+function atualizarInfoER(er) {
+  const info = ER_INFO[er] || {nome:er, praça:'—', regional:'—', gvo:'—', gcvo:'—'};
+  document.getElementById('erInfo').innerHTML = `
+    <span><strong>${er} — ${info.nome}</strong></span>
+    <span>${info.regional} · ${info.praça}</span>
+    <span>GVO: <strong>${info.gvo}</strong></span>
+    <span>GCVO: <strong>${info.gcvo}</strong></span>
+  `;
+}
+
+function salvarMeta() {
+  if (!estado) return;
+  estado.metaMakePct = parseInt(document.getElementById('metaMake').value) || 30;
+  estado.metaCabeloPct = parseInt(document.getElementById('metaCabelo').value) || 20;
+  salvarEstado();
+  atualizarPainelGeral();
+}
+
+// ====================================================
+// RENDER
+// ====================================================
+function renderizar() {
+  document.getElementById('labelDataGeral').textContent = fData(estado.data);
+  renderizarCaixas();
+  atualizarPainelGeral();
+  atualizarRanking();
+}
+
+function renderizarCaixas() {
+  const grid = document.getElementById('gridCaixas');
+  grid.innerHTML = '';
+  estado.caixas.forEach(c => grid.appendChild(criarCard(c)));
+}
+
+function criarCard(caixa) {
+  const total = caixa.pedidos.length;
+  const nMake = caixa.pedidos.filter(p=>p.make&&!p.cabelo).length;
+  const nCabelo = caixa.pedidos.filter(p=>p.cabelo&&!p.make).length;
+  const nAmbos = caixa.pedidos.filter(p=>p.make&&p.cabelo).length;
+  const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo).length;
+  const pMake = total ? Math.round(caixa.pedidos.filter(p=>p.make).length/total*100) : 0;
+  const pCabelo = total ? Math.round(caixa.pedidos.filter(p=>p.cabelo).length/total*100) : 0;
+  const wM = total?nMake/total*100:0, wC=total?nCabelo/total*100:0, wA=total?nAmbos/total*100:0, wS=total?nSem/total*100:100;
+
+  const card = document.createElement('div');
+  card.className='card-caixa'; card.id=`card-${caixa.id}`;
+  card.innerHTML = `
+    <div class="card-header">
+      <span class="nome-caixa">👤 ${caixa.nome}</span>
+      <span class="total-caixa">${total} pedido${total!==1?'s':''}</span>
+    </div>
+    <div class="card-body">
+      <div class="stats-caixa">
+        <div class="stat-item stat-make"><span class="val">${pMake}%</span>💄 Make</div>
+        <div class="stat-item stat-cabelo"><span class="val">${pCabelo}%</span>💆 Cabelo</div>
+        <div class="stat-item stat-ambos"><span class="val">${nAmbos}</span>💎 Ambos</div>
+      </div>
+      <div class="barra-caixa">
+        <div class="barra-seg seg-make" style="width:${wM}%"></div>
+        <div class="barra-seg seg-cabelo" style="width:${wC}%"></div>
+        <div class="barra-seg seg-ambos" style="width:${wA}%"></div>
+        <div class="barra-seg seg-sem" style="width:${wS}%"></div>
+      </div>
+      <div class="form-registro">
+        <div class="fl">Nº do Pedido</div>
+        <input class="input-pedido" type="text" id="numped-${caixa.id}" placeholder="Ex: 123456" maxlength="20">
+        <div class="fl">Incrementação</div>
+        <div class="toggles">
+          <button class="btn-toggle" id="tmake-${caixa.id}" onclick="toggleIncr('${caixa.id}','make')">
+            <span class="ico">💄</span>Make
+          </button>
+          <button class="btn-toggle" id="tcabelo-${caixa.id}" onclick="toggleIncr('${caixa.id}','cabelo')">
+            <span class="ico">💆</span>Cabelo
+          </button>
+          <button class="btn-toggle" id="tambos-${caixa.id}" onclick="toggleAmbos('${caixa.id}')">
+            <span class="ico">💎</span>Ambos
+          </button>
+        </div>
+        <button class="btn-registrar" onclick="registrarPedido('${caixa.id}')">✔ Registrar Pedido</button>
+      </div>
+      <div class="historico" id="hist-${caixa.id}">${renderHistorico(caixa)}</div>
+      <button class="btn-zerar-caixa" onclick="zerarCaixa('${caixa.id}')">Zerar pedidos desta caixa</button>
+    </div>`;
+  return card;
+}
+
+function renderHistorico(caixa) {
+  if (!caixa.pedidos.length) return '<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:12px">Nenhum pedido registrado</div>';
+  return [...caixa.pedidos].reverse().map(p=>{
+    const tipo = p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':'sem';
+    const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💎 Ambos',sem:'Sem incr.'};
+    return `<div class="historico-item">
+      <span class="historico-hora">${p.hora}</span>
+      <span class="historico-num">${p.numPedido||'—'}</span>
+      <span class="badge-hist ${tipo}">${lbl[tipo]}</span>
+    </div>`;
+  }).join('');
+}
+
+// ====================================================
+// TOGGLE / REGISTRO
+// ====================================================
+const toggleState = {};
+
+function toggleIncr(id, tipo) {
+  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false};
+  toggleState[id][tipo] = !toggleState[id][tipo];
+  syncBtnEstado(id);
+}
+
+function toggleAmbos(id) {
+  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false};
+  const ligado = toggleState[id].make && toggleState[id].cabelo;
+  toggleState[id].make = !ligado;
+  toggleState[id].cabelo = !ligado;
+  syncBtnEstado(id);
+}
+
+function syncBtnEstado(id) {
+  const s = toggleState[id]||{make:false,cabelo:false};
+  const bm = document.getElementById(`tmake-${id}`);
+  const bc = document.getElementById(`tcabelo-${id}`);
+  const ba = document.getElementById(`tambos-${id}`);
+  if(bm) bm.className='btn-toggle'+(s.make?' active-make':'');
+  if(bc) bc.className='btn-toggle'+(s.cabelo?' active-cabelo':'');
+  if(ba) ba.className='btn-toggle'+(s.make&&s.cabelo?' active-ambos':'');
+}
+
+function registrarPedido(id) {
+  const ts = toggleState[id]||{make:false,cabelo:false};
+  const numPedido = (document.getElementById(`numped-${id}`).value||'').trim();
+  const agora = new Date();
+  const hora = agora.toTimeString().substring(0,5);
+  const caixa = estado.caixas.find(c=>c.id===id);
+  const pedidoId = Date.now().toString();
+  const tipo = ts.make&&ts.cabelo?'Make+Cabelo':ts.make?'Make':ts.cabelo?'Cabelo':'Sem incrementação';
+
+  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo});
+  toggleState[id]={make:false,cabelo:false};
+  document.getElementById(`numped-${id}`).value='';
+  syncBtnEstado(id);
+  salvarEstado();
+
+  const old = document.getElementById(`card-${id}`);
+  old.replaceWith(criarCard(caixa));
+  atualizarPainelGeral();
+  atualizarRanking();
+  showToast('✔ Pedido registrado!');
+
+  sheetsRegistrar({
+    id: pedidoId,
+    dataAcomp: fDataBR(estado.data),
+    er: estado.er,
+    loja: estado.loja,
+    caixa: caixa.nome,
+    numPedido,
+    hora,
+    make: ts.make,
+    cabelo: ts.cabelo,
+    incrementacao: tipo,
+    metaMake: estado.metaMakePct||30,
+    metaCabelo: estado.metaCabeloPct||20,
+  });
+}
+
+function zerarCaixa(id) {
+  if(!confirm('Zerar pedidos desta caixa?')) return;
+  const caixa = estado.caixas.find(c=>c.id===id);
+  // Chama zerar no Sheets pelos IDs dos pedidos desta caixa
+  const ids = caixa.pedidos.map(p=>p.id);
+  caixa.pedidos=[];
+  salvarEstado();
+  const old = document.getElementById(`card-${id}`);
+  old.replaceWith(criarCard(estado.caixas.find(c=>c.id===id)));
+  atualizarPainelGeral();
+  atualizarRanking();
+  if(ids.length) sheetsZerar({ er: estado.er, dataAcomp: fDataBR(estado.data), caixaNome: caixa.nome });
+}
+
+function zerarTudo() {
+  if(!confirm('Zerar TODOS os pedidos de TODAS as caixas?\n\nOs registros também serão removidos do Google Sheets.')) return;
+  estado.caixas.forEach(c=>c.pedidos=[]);
+  salvarEstado();
+  renderizar();
+  sheetsZerar({ er: estado.er, dataAcomp: fDataBR(estado.data) });
+}
+
+// ====================================================
+// PAINEL GERAL
+// ====================================================
+function atualizarPainelGeral() {
+  const todos = estado.caixas.flatMap(c=>c.pedidos);
+  const total = todos.length;
+  const nMake=todos.filter(p=>p.make&&!p.cabelo).length;
+  const nCabelo=todos.filter(p=>p.cabelo&&!p.make).length;
+  const nAmbos=todos.filter(p=>p.make&&p.cabelo).length;
+  const nSem=todos.filter(p=>!p.make&&!p.cabelo).length;
+  const tMake=todos.filter(p=>p.make).length;
+  const tCabelo=todos.filter(p=>p.cabelo).length;
+  const pct=v=>total?Math.round(v/total*100):0;
+
+  document.getElementById('gtTotal').textContent=total;
+  document.getElementById('gtMake').textContent=tMake;
+  document.getElementById('gtCabelo').textContent=tCabelo;
+  document.getElementById('gtAmbos').textContent=nAmbos;
+  document.getElementById('gtMakePct').textContent=pct(tMake)+'%';
+  document.getElementById('gtCabeloPct').textContent=pct(tCabelo)+'%';
+  document.getElementById('gtAmbosPct').textContent=pct(nAmbos)+'%';
+  document.getElementById('bsMake').style.width=pct(nMake)+'%';
+  document.getElementById('bsCabelo').style.width=pct(nCabelo)+'%';
+  document.getElementById('bsAmbos').style.width=pct(nAmbos)+'%';
+  document.getElementById('bsSem').style.width=pct(nSem)+'%';
+
+  const metaM=estado.metaMakePct||30, metaC=estado.metaCabeloPct||20;
+  const pM=pct(tMake), pC=pct(tCabelo);
+  document.getElementById('mpMakePct').textContent=pM+'%';
+  document.getElementById('mpMetaMake').textContent=metaM+'%';
+  document.getElementById('mpCabeloPct').textContent=pC+'%';
+  document.getElementById('mpMetaCabelo').textContent=metaC+'%';
+  const fillM=Math.min(100,total?pM/metaM*100:0);
+  const fillC=Math.min(100,total?pC/metaC*100:0);
+  const corM=pM>=metaM?'#16A34A':pM>=metaM*.7?'#D97706':'var(--make-cor)';
+  const corC=pC>=metaC?'#16A34A':pC>=metaC*.7?'#D97706':'var(--cabelo-cor)';
+  document.getElementById('mpMakeFill').style.cssText=`width:${fillM}%;background:${corM}`;
+  document.getElementById('mpCabeloFill').style.cssText=`width:${fillC}%;background:${corC}`;
+}
+
+// ====================================================
+// RANKING
+// ====================================================
+function atualizarRanking() {
+  const rl = document.getElementById('rankingList');
+  const dados = estado.caixas.map(c=>{
+    const t=c.pedidos.length;
+    const m=c.pedidos.filter(p=>p.make).length;
+    const cab=c.pedidos.filter(p=>p.cabelo).length;
+    const score=t?Math.round((m+cab)/t/2*100):0;
+    return {nome:c.nome, total:t, make:m, cabelo:cab, score};
+  }).sort((a,b)=>b.score-a.score||b.total-a.total);
+
+  const totalGeral = estado.caixas.flatMap(c=>c.pedidos).length;
+  if(!totalGeral){rl.innerHTML='<div style="font-size:13px;color:#9CA3AF;text-align:center;padding:20px">Nenhum pedido registrado ainda</div>';return;}
+
+  const medalhas=['🥇','🥈','🥉'];
+  rl.innerHTML = dados.map((d,i)=>`
+    <div class="ranking-item pos-${i+1}">
+      <span class="medal">${medalhas[i]||'  '}</span>
+      <span class="rk-nome">${d.nome}</span>
+      <div class="rk-stats">
+        <span class="rk-chip rk-total">${d.total} ped.</span>
+        <span class="rk-chip rk-make">💄 ${d.total?Math.round(d.make/d.total*100):0}%</span>
+        <span class="rk-chip rk-cabelo">💆 ${d.total?Math.round(d.cabelo/d.total*100):0}%</span>
+      </div>
+      <span class="rk-score">${d.score}%</span>
+    </div>`).join('');
+}
+
+// ====================================================
+// GERENCIAR CAIXAS
+// ====================================================
+let caixasEditando = [];
+
+function renderCaixasForm() {
+  caixasEditando = getCaixasER(erAtual).map(c=>({...c}));
+  if(estado) caixasEditando = estado.caixas.map(c=>({id:c.id,nome:c.nome}));
+  // Atualiza label do ER na aba
+  const info = ER_INFO[erAtual]||{nome:erAtual,tipo:'vd'};
+  document.getElementById('cxErAtualLabel').textContent = `${erAtual} — ${info.nome}`;
+  const badge = document.getElementById('cxErBadge');
+  badge.className = 'badge-tipo';
+  if(info.tipo==='hub'){badge.classList.add('badge-hub');badge.textContent='🔵 HUB';}
+  else if(info.tipo==='hibrida'){badge.classList.add('badge-hibrida');badge.textContent='🟣 Híbrida';}
+  else{badge.classList.add('badge-vd');badge.textContent='🏬 Venda Direta';}
+  renderListaCaixas();
+}
+
+function renderListaCaixas() {
+  const lista = document.getElementById('caixasLista');
+  const er = erAtual;
+  const info = ER_INFO[er]||{nome:er};
+  lista.innerHTML = caixasEditando.map((c,i)=>`
+    <div class="caixa-row">
+      <span class="caixa-row-er">ER ${er}</span>
+      <span style="font-size:12px;color:#9CA3AF;min-width:20px;font-weight:700">${i+1}</span>
+      <input type="text" value="${c.nome}" id="cx-nome-${i}" placeholder="Nome da caixa" style="flex:1;border:1.5px solid var(--borda);border-radius:8px;padding:7px 11px;font-size:14px;font-weight:600">
+      <button class="btn-remover-caixa" onclick="removerCaixaForm(${i})">Remover</button>
+    </div>`).join('');
+}
+
+function adicionarCaixaForm() {
+  const n = caixasEditando.length+1;
+  caixasEditando.push({id:'cx_'+Date.now(), nome:'Caixa '+n});
+  renderListaCaixas();
+}
+
+function removerCaixaForm(i) {
+  if(!confirm('Remover esta caixa? Os pedidos dela serão perdidos.')) return;
+  caixasEditando.splice(i,1);
+  renderListaCaixas();
+}
+
+function salvarCaixas() {
+  caixasEditando.forEach((c,i)=>{
+    const inp = document.getElementById(`cx-nome-${i}`);
+    if(inp) c.nome = inp.value.trim()||c.nome;
+  });
+  salvarCaixasER(erAtual, caixasEditando);
+  if(estado){
+    const novasCaixas = caixasEditando.map(c=>{
+      const existe = estado.caixas.find(ec=>ec.id===c.id);
+      return existe ? {...existe, nome:c.nome} : {...c, pedidos:[]};
+    });
+    estado.caixas = novasCaixas;
+    salvarEstado();
+    renderizar();
+  }
+  showToast('✔ Caixas salvas!');
+  setTab('acompanhamento');
+}
+
+// ====================================================
+// GOOGLE SHEETS SYNC
+// ====================================================
+function salvarScriptUrl() {
+  const url = document.getElementById('scriptUrlInput').value.trim();
+  if(!url.startsWith('https://script.google.com')) {
+    showToast('❌ URL inválida — deve começar com https://script.google.com');
+    return;
+  }
+  SCRIPT_URL = url;
+  localStorage.setItem('vd_script_url', url);
+  atualizarStatusSync();
+  showToast('✔ URL salva! Clique em Testar Conexão.');
+}
+
+function atualizarStatusSync() {
+  const el = document.getElementById('syncStatus');
+  if(!el) return;
+  if(SCRIPT_URL) {
+    el.style.color = '#16A34A';
+    el.textContent = '● Sheets conectado';
+  } else {
+    el.style.color = '#9CA3AF';
+    el.textContent = '● Sheets desconectado';
+  }
+}
+
+function testarConexao() {
+  const url = document.getElementById('scriptUrlInput').value.trim();
+  const res = document.getElementById('testeResultado');
+  res.style.display = 'block';
+  res.style.background = '#FEF3C7';
+  res.style.color = '#92400E';
+  res.textContent = '⏳ Testando conexão...';
+
+  if(!url) { res.textContent = '❌ Cole a URL antes de testar.'; return; }
+
+  const cbName = 'vdping_' + Date.now();
+  const timer = setTimeout(() => {
+    delete window[cbName];
+    res.style.background = '#FEF2F2';
+    res.style.color = '#991B1B';
+    res.textContent = '❌ Timeout — verifique se a URL está correta e o script publicado como "Qualquer pessoa".';
+  }, 10000);
+
+  window[cbName] = function(data) {
+    clearTimeout(timer);
+    delete window[cbName];
+    if(data.status === 'ok') {
+      res.style.background = '#F0FDF4';
+      res.style.color = '#14532D';
+      res.textContent = '✅ ' + data.mensagem;
+      SCRIPT_URL = url;
+      localStorage.setItem('vd_script_url', url);
+      atualizarStatusSync();
+    } else {
+      res.style.background = '#FEF2F2';
+      res.style.color = '#991B1B';
+      res.textContent = '❌ ' + (data.mensagem||'Erro desconhecido');
+    }
+  };
+
+  const script = document.createElement('script');
+  script.src = `${url}?action=ping&callback=${cbName}`;
+  script.onerror = () => {
+    clearTimeout(timer);
+    delete window[cbName];
+    script.remove();
+    res.style.background = '#FEF2F2';
+    res.style.color = '#991B1B';
+    res.textContent = '❌ URL inválida ou script não publicado corretamente.';
+  };
+  document.body.appendChild(script);
+}
+
+function sheetsCall(payload, logMsg) {
+  if(!SCRIPT_URL) return;
+  adicionarLogSync('pend', logMsg);
+
+  const cbName = 'vdcb_' + Date.now();
+  const params = new URLSearchParams(
+    Object.fromEntries(Object.entries(payload).map(([k,v])=>[k, String(v)]))
+  );
+  params.set('callback', cbName);
+
+  // Timeout de 10s
+  const timer = setTimeout(() => {
+    delete window[cbName];
+    const el = document.getElementById('sc_'+cbName);
+    if(el) el.remove();
+    atualizarUltimoLog('err', '✘ Timeout — verifique a URL do script');
+  }, 10000);
+
+  window[cbName] = function(data) {
+    clearTimeout(timer);
+    delete window[cbName];
+    const el = document.getElementById('sc_'+cbName);
+    if(el) el.remove();
+    if(data.status === 'ok') atualizarUltimoLog('ok', `✔ ${data.mensagem}`);
+    else atualizarUltimoLog('err', `✘ ${data.mensagem}`);
+  };
+
+  const script = document.createElement('script');
+  script.id = 'sc_' + cbName;
+  script.src = `${SCRIPT_URL}?${params}`;
+  script.onerror = () => {
+    clearTimeout(timer);
+    delete window[cbName];
+    script.remove();
+    atualizarUltimoLog('err', '✘ Erro ao carregar script — URL inválida?');
+  };
+  document.body.appendChild(script);
+}
+
+function sheetsRegistrar(payload) {
+  sheetsCall(
+    {action:'registrar', ...payload},
+    `Enviando pedido ${payload.numPedido||'s/n'} — ${payload.caixa}...`
+  );
+}
+
+function sheetsZerar(payload) {
+  sheetsCall(
+    {action:'zerar', ...payload},
+    `Removendo registros ER ${payload.er} de ${payload.dataAcomp}...`
+  );
+}
+
+let ultimoLogId = 0;
+function adicionarLogSync(tipo, msg) {
+  const log = document.getElementById('syncLog');
+  if(!log) return;
+  if(log.children.length===1 && log.children[0].style.color==='rgb(156, 163, 175)') log.innerHTML='';
+  const id = 'slog-'+(++ultimoLogId);
+  const agora = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const div = document.createElement('div');
+  div.id = id;
+  div.className = `sync-entry sync-${tipo}`;
+  div.innerHTML = `<div class="sync-dot"></div><span style="color:#9CA3AF;min-width:60px">${agora}</span><span>${msg}</span>`;
+  log.prepend(div);
+  // Mantém só os 10 últimos
+  while(log.children.length > 10) log.removeChild(log.lastChild);
+}
+
+function atualizarUltimoLog(tipo, msg) {
+  const el = document.getElementById('slog-'+ultimoLogId);
+  if(!el) return;
+  el.className = `sync-entry sync-${tipo}`;
+  el.querySelectorAll('span')[1].textContent = msg;
+}
+
+// ====================================================
+// EXPORT WHATSAPP
+// ====================================================
+function copiarWhatsApp() {
+  const todos=estado.caixas.flatMap(c=>c.pedidos);
+  const total=todos.length;
+  const pct=(v,t)=>t?Math.round(v/t*100):0;
+  const tM=todos.filter(p=>p.make).length, tC=todos.filter(p=>p.cabelo).length, tA=todos.filter(p=>p.make&&p.cabelo).length;
+  let txt=`📦 *ACOMPANHAMENTO VD MOSSORÓ — ${fDataBR(estado.data)}*\n`;
+  txt+=`🏪 *${estado.loja}* (ER ${estado.er})\n\n`;
+  txt+=`*RESULTADO GERAL*\n`;
+  txt+=`Total de pedidos: *${total}*\n`;
+  txt+=`💄 Com Make: *${tM} (${pct(tM,total)}%)*\n`;
+  txt+=`💆 Com Cabelo: *${tC} (${pct(tC,total)}%)*\n`;
+  txt+=`💎 Make + Cabelo: *${tA}*\n\n`;
+  txt+=`*POR CAIXA*\n`;
+  estado.caixas.forEach(c=>{
+    const t=c.pedidos.length, m=c.pedidos.filter(p=>p.make).length, cab=c.pedidos.filter(p=>p.cabelo).length;
+    txt+=`👤 *${c.nome}*: ${t} pedidos | Make ${pct(m,t)}% | Cabelo ${pct(cab,t)}%\n`;
+  });
+  txt+=`\n_Canal VD Mossoró_`;
+  navigator.clipboard.writeText(txt).then(()=>showToast('📋 Resumo copiado!'));
+}
+
+// ====================================================
+// EXPORT CSV
+// ====================================================
+function exportarExcel() {
+  const linhas=[['Data','ER','Loja','Caixa','Nº Pedido','Hora','Make','Cabelo','Incrementação']];
+  estado.caixas.forEach(cx=>{
+    cx.pedidos.forEach(p=>{
+      const tipo=p.make&&p.cabelo?'Make+Cabelo':p.make?'Make':p.cabelo?'Cabelo':'Sem incrementação';
+      linhas.push([fDataBR(estado.data),estado.er,estado.loja,cx.nome,p.numPedido||'',p.hora,p.make?'SIM':'NÃO',p.cabelo?'SIM':'NÃO',tipo]);
+    });
+  });
+  const csv='﻿'+linhas.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=`vd_${estado.er}_${estado.data}.csv`; a.click();
+  URL.revokeObjectURL(url);
+  showToast('📊 Planilha exportada!');
+}
+
+// ====================================================
+// UTILS
+// ====================================================
+function fData(iso){if(!iso)return'';const[y,m,d]=iso.split('-');return`${d}/${m}/${y}`;}
+function fDataBR(iso){return fData(iso);}
+
+function atualizarRelogio(){
+  const s=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const r=document.getElementById('relogio'), rf=document.getElementById('rodapeHora');
+  if(r)r.textContent='🕐 '+s; if(rf)rf.textContent=s;
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+inicializar();
+</script>
+</body>
+</html>
