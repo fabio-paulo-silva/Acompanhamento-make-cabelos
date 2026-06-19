@@ -627,21 +627,47 @@ function dataHoje() { return new Date().toISOString().split('T')[0]; }
 
 function carregarDia(er, data, callback) {
   const salvo = carregarEstado(er, data);
-
-  // Detecta se os caixas são do formato antigo (antes da integração com Sheets)
   const caixasAntigas = salvo && salvo.caixas.some(c => !String(c.id).startsWith('cx_sheets_'));
   const semCaixas = !salvo || salvo.caixas.length === 0;
 
   if (salvo) estado = salvo;
 
-  if (semCaixas || caixasAntigas) {
-    // Busca nomes atualizados do Sheets e faz merge dos pedidos existentes
-    mostrarLoadingCaixas(true);
-    carregarCaixasSheets(er, (nomes) => {
+  // Fase 2: busca pedidos do dia no Sheets e popula estado
+  const sincronizarPedidos = (callback) => {
+    mostrarLoadingCaixas(true, '⏳ Sincronizando pedidos do dia…');
+    carregarPedidosDiaSheets(er, fDataBR(data), (pedidosSheets) => {
       mostrarLoadingCaixas(false);
+      if (pedidosSheets.length > 0) {
+        // Sheets é a fonte de verdade — reconstrói pedidos por caixa
+        estado.caixas.forEach(cx => { cx.pedidos = []; });
+        pedidosSheets.forEach(p => {
+          const cx = estado.caixas.find(c => c.nome === p.caixa);
+          if (!cx) return;
+          const origens = parseOrigem(p.origem, p.make, p.cabelo, p.multimarca);
+          cx.pedidos.push({
+            id: p.id, numPedido: p.numPedido, hora: p.hora,
+            make: p.make, cabelo: p.cabelo, multimarca: p.multimarca,
+            makeOrigem: origens.makeOrigem,
+            cabeloOrigem: origens.cabeloOrigem,
+            multimarcaOrigem: origens.multimarcaOrigem,
+          });
+        });
+        salvarEstado();
+      }
+      // Se Sheets retornou vazio, mantém localStorage (fallback offline)
+      migrateEstado();
+      if (callback) callback();
+    });
+  };
+
+  // Fase 1: garante que os caixas estão carregados
+  if (semCaixas || caixasAntigas) {
+    mostrarLoadingCaixas(true, '⏳ Carregando caixas da planilha…');
+    carregarCaixasSheets(er, (nomes) => {
       if (nomes.length === 0 && salvo) {
-        // Sheets não retornou nada — mantém estado salvo sem alterar
-        migrateEstado(); if (callback) callback(); return;
+        // Sheets não retornou caixas — usa o que tem e tenta pedidos mesmo assim
+        sincronizarPedidos(callback);
+        return;
       }
       const pedidosAntigos = salvo ? salvo.caixas : [];
       const novasCaixas = nomes.map((nome, i) => {
@@ -651,14 +677,12 @@ function carregarDia(er, data, callback) {
       if (!estado) estado = estadoInicial(er, data, nomes);
       else { estado.caixas = novasCaixas; estado.er = er; estado.loja = (ER_INFO[er]||{nome:er}).nome; }
       salvarEstado();
-      migrateEstado();
-      if (callback) callback();
+      sincronizarPedidos(callback);
     });
     return;
   }
 
-  migrateEstado();
-  if (callback) callback();
+  sincronizarPedidos(callback);
 }
 
 function migrateEstado() {
@@ -671,12 +695,35 @@ function migrateEstado() {
   document.getElementById('metaMulti').value = estado.metaMultiPct;
 }
 
-function mostrarLoadingCaixas(show) {
+function mostrarLoadingCaixas(show, msg) {
   const grid = document.getElementById('gridCaixas');
   if (!grid) return;
-  if (show) {
-    grid.innerHTML = '<div class="card-loading">⏳ Carregando caixas da planilha…</div>';
+  if (show) grid.innerHTML = `<div class="card-loading">${msg||'⏳ Carregando caixas da planilha…'}</div>`;
+}
+
+function carregarPedidosDiaSheets(er, dataAcompBR, callback) {
+  const cbName = 'vdpd_' + Date.now();
+  const timer = setTimeout(() => { delete window[cbName]; callback([]); }, 15000);
+  window[cbName] = function(data) {
+    clearTimeout(timer); delete window[cbName];
+    callback((data.status === 'ok' && data.pedidos) ? data.pedidos : []);
+  };
+  const script = document.createElement('script');
+  script.src = `${SCRIPT_URL}?action=getPedidosDia&er=${encodeURIComponent(er)}&dataAcomp=${encodeURIComponent(dataAcompBR)}&callback=${cbName}`;
+  script.onerror = () => { clearTimeout(timer); delete window[cbName]; callback([]); };
+  document.body.appendChild(script);
+}
+
+function parseOrigem(origemStr, hasMake, hasCabelo, hasMulti) {
+  const incrCaixa = [];
+  if (origemStr && origemStr.startsWith('Incr. no Caixa:')) {
+    origemStr.replace('Incr. no Caixa:', '').trim().split('+').forEach(s => incrCaixa.push(s.trim()));
   }
+  return {
+    makeOrigem:       hasMake   ? (incrCaixa.includes('Make')       ? 'caixa' : 'pedido') : null,
+    cabeloOrigem:     hasCabelo ? (incrCaixa.includes('Cabelo')     ? 'caixa' : 'pedido') : null,
+    multimarcaOrigem: hasMulti  ? (incrCaixa.includes('Multimarca') ? 'caixa' : 'pedido') : null,
+  };
 }
 
 function trocarER() {

@@ -41,6 +41,8 @@ function doGet(e) {
       resultado = deletarPedido(params);
     } else if (action === 'getCaixas') {
       resultado = getCaixas(params);
+    } else if (action === 'getPedidosDia') {
+      resultado = getPedidosDia(params);
     } else if (action === 'ping') {
       resultado = { status: 'ok', mensagem: 'Conexão estabelecida com sucesso!' };
     } else if (action === 'debug') {
@@ -194,6 +196,38 @@ function zerarRegistros(p) {
     status: 'ok',
     mensagem: `${removidos} registro(s) removido(s) para ER ${er} em ${dataAcomp}.`
   };
+}
+
+// ----------------------------------------------------------------
+// Retorna todos os pedidos de um ER+data a partir de "Registros VD"
+// ----------------------------------------------------------------
+function getPedidosDia(p) {
+  const er = String(p.er || '').trim();
+  const dataAcomp = String(p.dataAcomp || '').trim();
+  if (!er || !dataAcomp) return { status: 'erro', mensagem: 'ER e dataAcomp são obrigatórios.' };
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName(ABA_NOME);
+  if (!aba) return { status: 'ok', pedidos: [] };
+
+  const dados = aba.getDataRange().getValues();
+  const pedidos = [];
+  for (let i = 1; i < dados.length; i++) {
+    const row = dados[i];
+    if (String(row[3]).trim() === er && String(row[1]).trim() === dataAcomp) {
+      pedidos.push({
+        id:          String(row[0]),
+        caixa:       String(row[5]),
+        numPedido:   String(row[6]),
+        hora:        String(row[7]),
+        make:        row[8] === 'SIM',
+        cabelo:      row[9] === 'SIM',
+        multimarca:  row[10] === 'SIM',
+        origem:      String(row[12]),
+      });
+    }
+  }
+  return { status: 'ok', pedidos };
 }
 
 // ----------------------------------------------------------------
