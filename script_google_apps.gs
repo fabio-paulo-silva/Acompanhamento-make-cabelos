@@ -19,8 +19,6 @@ const CABECALHO = [
   'Com Cabelo',
   'Com Multimarca',
   'Tipo de Incrementação',
-  'Meta Make (%)',
-  'Meta Cabelo (%)',
 ];
 
 // ----------------------------------------------------------------
@@ -91,8 +89,6 @@ function garantirAba() {
     aba.setColumnWidth(10, 100); // Com Cabelo
     aba.setColumnWidth(11, 120); // Com Multimarca
     aba.setColumnWidth(12, 160); // Tipo Incrementação
-    aba.setColumnWidth(13, 110); // Meta Make
-    aba.setColumnWidth(14, 110); // Meta Cabelo
   }
 
   return aba;
@@ -121,8 +117,6 @@ function registrarPedido(p) {
     p.cabelo === 'true' ? 'SIM' : 'NÃO',
     p.multimarca === 'true' ? 'SIM' : 'NÃO',
     p.incrementacao || '',
-    p.metaMake      || '',
-    p.metaCabelo    || '',
   ];
 
   aba.appendRow(linha);

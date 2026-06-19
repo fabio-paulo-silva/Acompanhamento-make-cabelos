@@ -134,6 +134,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .stat-make{background:var(--make-fundo);color:var(--make-cor)}
 .stat-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
 .stat-ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+.stat-combo{background:var(--ambos-fundo);color:var(--ambos-cor)}
 .stat-multi{background:var(--multi-fundo);color:var(--multi-cor)}
 
 .barra-caixa{height:8px;border-radius:6px;overflow:hidden;display:flex;background:#E5E7EB;margin-bottom:14px}
@@ -152,6 +153,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .btn-toggle.active-make{background:var(--make-fundo);color:var(--make-cor);border-color:var(--make-cor);box-shadow:0 0 0 3px rgba(197,90,17,.15)}
 .btn-toggle.active-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor);border-color:var(--cabelo-cor);box-shadow:0 0 0 3px rgba(55,86,35,.15)}
 .btn-toggle.active-ambos{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 3px rgba(112,48,160,.15)}
+.btn-toggle.active-combo{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 4px rgba(112,48,160,.25)}
 .btn-toggle.active-multi{background:var(--multi-fundo);color:var(--multi-cor);border-color:var(--multi-cor);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
 
 .btn-registrar{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.3px}
@@ -167,6 +169,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .badge-hist.make{background:var(--make-fundo);color:var(--make-cor)}
 .badge-hist.cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
 .badge-hist.ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+.badge-hist.combo{background:var(--ambos-fundo);color:var(--ambos-cor)}
 .badge-hist.multi{background:var(--multi-fundo);color:var(--multi-cor)}
 .badge-hist.sem{background:#F3F4F6;color:#9CA3AF}
 .btn-del-pedido{background:none;border:none;color:#D1D5DB;cursor:pointer;font-size:14px;padding:0 2px;line-height:1;flex-shrink:0;transition:color .15s}
@@ -319,12 +322,17 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
     <span class="titulo">🎯 Metas do dia</span>
     <div class="meta-item">
       <label>💄 Make</label>
-      <input type="number" id="metaMake" value="30" min="0" max="100" onchange="salvarMeta()">
+      <input type="number" id="metaMake" value="39" min="0" max="100" onchange="salvarMeta()">
       <span>%</span>
     </div>
     <div class="meta-item">
       <label>💆 Cabelo</label>
-      <input type="number" id="metaCabelo" value="20" min="0" max="100" onchange="salvarMeta()">
+      <input type="number" id="metaCabelo" value="40" min="0" max="100" onchange="salvarMeta()">
+      <span>%</span>
+    </div>
+    <div class="meta-item">
+      <label>🏷️ Multimarca</label>
+      <input type="number" id="metaMulti" value="75" min="0" max="100" onchange="salvarMeta()">
       <span>%</span>
     </div>
   </div>
@@ -353,7 +361,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       </div>
       <div class="card-total ct-ambos">
         <span class="num" id="gtAmbos">0</span>
-        <div class="lbl">💎 Make+Cab.</div>
+        <div class="lbl">💎 Combo Diamante</div>
         <div class="pct" id="gtAmbosPct">0%</div>
       </div>
       <div class="card-total" style="background:var(--multi-fundo);border:2px solid var(--multi-cor)15">
@@ -369,16 +377,16 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       <div class="barra-seg seg-sem" id="bsSem" style="width:100%"></div>
     </div>
     <div class="legenda-barra" style="margin-top:8px">
-      <div class="legenda-item"><div class="legenda-dot" style="background:var(--make-cor)"></div>Só Make</div>
-      <div class="legenda-item"><div class="legenda-dot" style="background:var(--cabelo-cor)"></div>Só Cabelo</div>
-      <div class="legenda-item"><div class="legenda-dot" style="background:var(--ambos-cor)"></div>Make+Cabelo</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--make-cor)"></div>Make</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--cabelo-cor)"></div>Cabelo</div>
+      <div class="legenda-item"><div class="legenda-dot" style="background:var(--ambos-cor)"></div>Combo Diamante</div>
       <div class="legenda-item"><div class="legenda-dot" style="background:#D1D5DB"></div>Sem incrementação</div>
     </div>
     <div class="meta-progress">
       <div class="meta-prog-item">
         <div class="meta-prog-label">
           <span>💄 Make</span>
-          <strong><span id="mpMakePct">0%</span> / meta <span id="mpMetaMake">30%</span></strong>
+          <strong><span id="mpMakePct">0%</span> / meta <span id="mpMetaMake">39%</span></strong>
         </div>
         <div class="meta-prog-bar">
           <div class="meta-prog-fill" id="mpMakeFill" style="width:0%;background:var(--make-cor)"></div>
@@ -387,10 +395,19 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       <div class="meta-prog-item">
         <div class="meta-prog-label">
           <span>💆 Cabelo</span>
-          <strong><span id="mpCabeloPct">0%</span> / meta <span id="mpMetaCabelo">20%</span></strong>
+          <strong><span id="mpCabeloPct">0%</span> / meta <span id="mpMetaCabelo">40%</span></strong>
         </div>
         <div class="meta-prog-bar">
           <div class="meta-prog-fill" id="mpCabeloFill" style="width:0%;background:var(--cabelo-cor)"></div>
+        </div>
+      </div>
+      <div class="meta-prog-item">
+        <div class="meta-prog-label">
+          <span>🏷️ Multimarca</span>
+          <strong><span id="mpMultiPct">0%</span> / meta <span id="mpMetaMulti">75%</span></strong>
+        </div>
+        <div class="meta-prog-bar">
+          <div class="meta-prog-fill" id="mpMultiFill" style="width:0%;background:var(--multi-cor)"></div>
         </div>
       </div>
     </div>
@@ -599,7 +616,7 @@ function estadoInicial(er, data) {
   const info = ER_INFO[er] || {nome:er};
   return {
     data, er, loja: info.nome,
-    metaMakePct: 30, metaCabeloPct: 20,
+    metaMakePct: 39, metaCabeloPct: 40, metaMultiPct: 75,
     caixas: getCaixasER(er).map(c=>({...c, pedidos:[]}))
   };
 }
@@ -628,8 +645,9 @@ function carregarDia(er, data) {
   const salvo = carregarEstado(er, data);
   estado = salvo || estadoInicial(er, data);
   if (!salvo) salvarEstado();
-  document.getElementById('metaMake').value = estado.metaMakePct || 30;
-  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 20;
+  document.getElementById('metaMake').value = estado.metaMakePct || 39;
+  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 40;
+  document.getElementById('metaMulti').value = estado.metaMultiPct || 75;
 }
 
 function trocarER() {
@@ -662,8 +680,9 @@ function atualizarInfoER(er) {
 
 function salvarMeta() {
   if (!estado) return;
-  estado.metaMakePct = parseInt(document.getElementById('metaMake').value) || 30;
-  estado.metaCabeloPct = parseInt(document.getElementById('metaCabelo').value) || 20;
+  estado.metaMakePct = parseInt(document.getElementById('metaMake').value) || 39;
+  estado.metaCabeloPct = parseInt(document.getElementById('metaCabelo').value) || 40;
+  estado.metaMultiPct = parseInt(document.getElementById('metaMulti').value) || 75;
   salvarEstado();
   atualizarPainelGeral();
 }
@@ -686,14 +705,15 @@ function renderizarCaixas() {
 
 function criarCard(caixa) {
   const total = caixa.pedidos.length;
-  const nMake = caixa.pedidos.filter(p=>p.make&&!p.cabelo).length;
-  const nCabelo = caixa.pedidos.filter(p=>p.cabelo&&!p.make).length;
-  const nAmbos = caixa.pedidos.filter(p=>p.make&&p.cabelo).length;
-  const nMulti = caixa.pedidos.filter(p=>p.multimarca).length;
+  const nMake = caixa.pedidos.filter(p=>p.make&&!p.cabelo&&!p.multimarca).length;
+  const nCabelo = caixa.pedidos.filter(p=>p.cabelo&&!p.make&&!p.multimarca).length;
+  const nCombo = caixa.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
+  const nMultiSolo = caixa.pedidos.filter(p=>p.multimarca&&!p.make&&!p.cabelo).length;
   const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
   const pMake = total ? Math.round(caixa.pedidos.filter(p=>p.make).length/total*100) : 0;
   const pCabelo = total ? Math.round(caixa.pedidos.filter(p=>p.cabelo).length/total*100) : 0;
-  const wM = total?nMake/total*100:0, wC=total?nCabelo/total*100:0, wA=total?nAmbos/total*100:0, wS=total?nSem/total*100:100;
+  const pMulti = total ? Math.round(caixa.pedidos.filter(p=>p.multimarca).length/total*100) : 0;
+  const wM = total?nMake/total*100:0, wC=total?nCabelo/total*100:0, wA=total?nCombo/total*100:0, wS=total?nSem/total*100:100;
 
   const card = document.createElement('div');
   card.className='card-caixa'; card.id=`card-${caixa.id}`;
@@ -706,8 +726,8 @@ function criarCard(caixa) {
       <div class="stats-caixa">
         <div class="stat-item stat-make"><span class="val">${pMake}%</span>💄 Make</div>
         <div class="stat-item stat-cabelo"><span class="val">${pCabelo}%</span>💆 Cabelo</div>
-        <div class="stat-item stat-ambos"><span class="val">${nAmbos}</span>💎 Ambos</div>
-        <div class="stat-item stat-multi"><span class="val">${nMulti}</span>🏷️ Multi</div>
+        <div class="stat-item stat-multi"><span class="val">${pMulti}%</span>🏷️ Multi</div>
+        <div class="stat-item stat-combo"><span class="val">${nCombo}</span>💎 Combo</div>
       </div>
       <div class="barra-caixa">
         <div class="barra-seg seg-make" style="width:${wM}%"></div>
@@ -726,11 +746,11 @@ function criarCard(caixa) {
           <button class="btn-toggle" id="tcabelo-${caixa.id}" onclick="toggleIncr('${caixa.id}','cabelo')">
             <span class="ico">💆</span>Cabelo
           </button>
-          <button class="btn-toggle" id="tambos-${caixa.id}" onclick="toggleAmbos('${caixa.id}')">
-            <span class="ico">💎</span>Ambos
-          </button>
           <button class="btn-toggle" id="tmulti-${caixa.id}" onclick="toggleIncr('${caixa.id}','multimarca')">
             <span class="ico">🏷️</span>Multimarca
+          </button>
+          <button class="btn-toggle" id="tcombo-${caixa.id}" onclick="toggleCombo('${caixa.id}')">
+            <span class="ico">💎</span>Combo Diamante
           </button>
         </div>
         <button class="btn-registrar" onclick="registrarPedido('${caixa.id}')">✔ Registrar Pedido</button>
@@ -744,8 +764,8 @@ function criarCard(caixa) {
 function renderHistorico(caixa) {
   if (!caixa.pedidos.length) return '<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:12px">Nenhum pedido registrado</div>';
   return [...caixa.pedidos].reverse().map(p=>{
-    const tipo = p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':p.multimarca?'multi':'sem';
-    const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💎 Ambos',multi:'🏷️ Multimarca',sem:'Sem incr.'};
+    const tipo = p.make&&p.cabelo&&p.multimarca?'combo':p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':p.multimarca?'multi':'sem';
+    const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💄+💆 Make+Cab.',combo:'💎 Combo Diamante',multi:'🏷️ Multimarca',sem:'Sem incr.'};
     return `<div class="historico-item">
       <span class="historico-hora">${p.hora}</span>
       <span class="historico-num">${p.numPedido||'—'}</span>
@@ -767,11 +787,12 @@ function toggleIncr(id, tipo) {
   syncBtnEstado(id);
 }
 
-function toggleAmbos(id) {
+function toggleCombo(id) {
   if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
-  const ligado = toggleState[id].make && toggleState[id].cabelo;
+  const ligado = toggleState[id].make && toggleState[id].cabelo && toggleState[id].multimarca;
   toggleState[id].make = !ligado;
   toggleState[id].cabelo = !ligado;
+  toggleState[id].multimarca = !ligado;
   syncBtnEstado(id);
 }
 
@@ -779,12 +800,13 @@ function syncBtnEstado(id) {
   const s = toggleState[id]||{make:false,cabelo:false,multimarca:false};
   const bm = document.getElementById(`tmake-${id}`);
   const bc = document.getElementById(`tcabelo-${id}`);
-  const ba = document.getElementById(`tambos-${id}`);
   const bx = document.getElementById(`tmulti-${id}`);
-  if(bm) bm.className='btn-toggle'+(s.make?' active-make':'');
-  if(bc) bc.className='btn-toggle'+(s.cabelo?' active-cabelo':'');
-  if(ba) ba.className='btn-toggle'+(s.make&&s.cabelo?' active-ambos':'');
-  if(bx) bx.className='btn-toggle'+(s.multimarca?' active-multi':'');
+  const bd = document.getElementById(`tcombo-${id}`);
+  const isCombo = s.make && s.cabelo && s.multimarca;
+  if(bm) bm.className='btn-toggle'+(s.make&&!isCombo?' active-make':isCombo?' active-combo':'');
+  if(bc) bc.className='btn-toggle'+(s.cabelo&&!isCombo?' active-cabelo':isCombo?' active-combo':'');
+  if(bx) bx.className='btn-toggle'+(s.multimarca&&!isCombo?' active-multi':isCombo?' active-combo':'');
+  if(bd) bd.className='btn-toggle'+(isCombo?' active-combo':'');
 }
 
 function registrarPedido(id) {
@@ -795,11 +817,15 @@ function registrarPedido(id) {
   const caixa = estado.caixas.find(c=>c.id===id);
   const pedidoId = Date.now().toString();
 
-  const partes = [];
-  if(ts.make) partes.push('Make');
-  if(ts.cabelo) partes.push('Cabelo');
-  if(ts.multimarca) partes.push('Multimarca');
-  const tipo = partes.length ? partes.join('+') : 'Sem incrementação';
+  let tipo;
+  if(ts.make && ts.cabelo && ts.multimarca) tipo = 'Combo Diamante';
+  else {
+    const partes = [];
+    if(ts.make) partes.push('Make');
+    if(ts.cabelo) partes.push('Cabelo');
+    if(ts.multimarca) partes.push('Multimarca');
+    tipo = partes.length ? partes.join('+') : 'Sem incrementação';
+  }
 
   caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo, multimarca:ts.multimarca});
   toggleState[id]={make:false,cabelo:false,multimarca:false};
@@ -825,8 +851,6 @@ function registrarPedido(id) {
     cabelo: ts.cabelo,
     multimarca: ts.multimarca,
     incrementacao: tipo,
-    metaMake: estado.metaMakePct||30,
-    metaCabelo: estado.metaCabeloPct||20,
   });
 }
 
@@ -861,41 +885,46 @@ function zerarCaixa(id) {
 function atualizarPainelGeral() {
   const todos = estado.caixas.flatMap(c=>c.pedidos);
   const total = todos.length;
-  const nMake=todos.filter(p=>p.make&&!p.cabelo&&!p.multimarca).length;
-  const nCabelo=todos.filter(p=>p.cabelo&&!p.make&&!p.multimarca).length;
-  const nAmbos=todos.filter(p=>p.make&&p.cabelo).length;
-  const nMulti=todos.filter(p=>p.multimarca).length;
+  const nCombo=todos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
+  const nMakeSolo=todos.filter(p=>p.make&&!p.cabelo&&!p.multimarca).length;
+  const nCabeloSolo=todos.filter(p=>p.cabelo&&!p.make&&!p.multimarca).length;
   const nSem=todos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
   const tMake=todos.filter(p=>p.make).length;
   const tCabelo=todos.filter(p=>p.cabelo).length;
+  const tMulti=todos.filter(p=>p.multimarca).length;
   const pct=v=>total?Math.round(v/total*100):0;
 
   document.getElementById('gtTotal').textContent=total;
   document.getElementById('gtMake').textContent=tMake;
   document.getElementById('gtCabelo').textContent=tCabelo;
-  document.getElementById('gtAmbos').textContent=nAmbos;
-  document.getElementById('gtMulti').textContent=nMulti;
+  document.getElementById('gtAmbos').textContent=nCombo;
+  document.getElementById('gtMulti').textContent=tMulti;
   document.getElementById('gtMakePct').textContent=pct(tMake)+'%';
   document.getElementById('gtCabeloPct').textContent=pct(tCabelo)+'%';
-  document.getElementById('gtAmbosPct').textContent=pct(nAmbos)+'%';
-  document.getElementById('gtMultiPct').textContent=pct(nMulti)+'%';
-  document.getElementById('bsMake').style.width=pct(nMake)+'%';
-  document.getElementById('bsCabelo').style.width=pct(nCabelo)+'%';
-  document.getElementById('bsAmbos').style.width=pct(nAmbos)+'%';
+  document.getElementById('gtAmbosPct').textContent=pct(nCombo)+'%';
+  document.getElementById('gtMultiPct').textContent=pct(tMulti)+'%';
+  document.getElementById('bsMake').style.width=pct(nMakeSolo)+'%';
+  document.getElementById('bsCabelo').style.width=pct(nCabeloSolo)+'%';
+  document.getElementById('bsAmbos').style.width=pct(nCombo)+'%';
   document.getElementById('bsSem').style.width=pct(nSem)+'%';
 
-  const metaM=estado.metaMakePct||30, metaC=estado.metaCabeloPct||20;
-  const pM=pct(tMake), pC=pct(tCabelo);
+  const metaM=estado.metaMakePct||39, metaC=estado.metaCabeloPct||40, metaMu=estado.metaMultiPct||75;
+  const pM=pct(tMake), pC=pct(tCabelo), pMu=pct(tMulti);
   document.getElementById('mpMakePct').textContent=pM+'%';
   document.getElementById('mpMetaMake').textContent=metaM+'%';
   document.getElementById('mpCabeloPct').textContent=pC+'%';
   document.getElementById('mpMetaCabelo').textContent=metaC+'%';
+  document.getElementById('mpMultiPct').textContent=pMu+'%';
+  document.getElementById('mpMetaMulti').textContent=metaMu+'%';
   const fillM=Math.min(100,total?pM/metaM*100:0);
   const fillC=Math.min(100,total?pC/metaC*100:0);
+  const fillMu=Math.min(100,total?pMu/metaMu*100:0);
   const corM=pM>=metaM?'#16A34A':pM>=metaM*.7?'#D97706':'var(--make-cor)';
   const corC=pC>=metaC?'#16A34A':pC>=metaC*.7?'#D97706':'var(--cabelo-cor)';
+  const corMu=pMu>=metaMu?'#16A34A':pMu>=metaMu*.7?'#D97706':'var(--multi-cor)';
   document.getElementById('mpMakeFill').style.cssText=`width:${fillM}%;background:${corM}`;
   document.getElementById('mpCabeloFill').style.cssText=`width:${fillC}%;background:${corC}`;
+  document.getElementById('mpMultiFill').style.cssText=`width:${fillMu}%;background:${corMu}`;
 }
 
 // ====================================================
@@ -908,8 +937,9 @@ function atualizarRanking() {
     const m=c.pedidos.filter(p=>p.make).length;
     const cab=c.pedidos.filter(p=>p.cabelo).length;
     const multi=c.pedidos.filter(p=>p.multimarca).length;
+    const combo=c.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
     const score=t?Math.round((m+cab+multi)/t/3*100):0;
-    return {nome:c.nome, total:t, make:m, cabelo:cab, multi, score};
+    return {nome:c.nome, total:t, make:m, cabelo:cab, multi, combo, score};
   }).sort((a,b)=>b.score-a.score||b.total-a.total);
 
   const totalGeral = estado.caixas.flatMap(c=>c.pedidos).length;
@@ -925,6 +955,7 @@ function atualizarRanking() {
         <span class="rk-chip rk-make">💄 ${d.total?Math.round(d.make/d.total*100):0}%</span>
         <span class="rk-chip rk-cabelo">💆 ${d.total?Math.round(d.cabelo/d.total*100):0}%</span>
         <span class="rk-chip" style="background:var(--multi-fundo);color:var(--multi-cor)">🏷️ ${d.total?Math.round(d.multi/d.total*100):0}%</span>
+        <span class="rk-chip" style="background:var(--ambos-fundo);color:var(--ambos-cor)">💎 ${d.combo}</span>
       </div>
       <span class="rk-score">${d.score}%</span>
     </div>`).join('');
@@ -1159,20 +1190,21 @@ function copiarWhatsApp() {
   const total=todos.length;
   const pct=(v,t)=>t?Math.round(v/t*100):0;
   const tM=todos.filter(p=>p.make).length, tC=todos.filter(p=>p.cabelo).length;
-  const tA=todos.filter(p=>p.make&&p.cabelo).length, tMu=todos.filter(p=>p.multimarca).length;
+  const tMu=todos.filter(p=>p.multimarca).length, tCombo=todos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
   let txt=`📦 *ACOMPANHAMENTO VD MOSSORÓ — ${fDataBR(estado.data)}*\n`;
   txt+=`🏪 *${estado.loja}* (ER ${estado.er})\n\n`;
   txt+=`*RESULTADO GERAL*\n`;
   txt+=`Total de pedidos: *${total}*\n`;
   txt+=`💄 Com Make: *${tM} (${pct(tM,total)}%)*\n`;
   txt+=`💆 Com Cabelo: *${tC} (${pct(tC,total)}%)*\n`;
-  txt+=`💎 Make + Cabelo: *${tA}*\n`;
-  txt+=`🏷️ Multimarca: *${tMu} (${pct(tMu,total)}%)*\n\n`;
+  txt+=`🏷️ Multimarca: *${tMu} (${pct(tMu,total)}%)*\n`;
+  txt+=`💎 Combo Diamante: *${tCombo} (${pct(tCombo,total)}%)*\n\n`;
   txt+=`*POR CAIXA*\n`;
   estado.caixas.forEach(c=>{
     const t=c.pedidos.length, m=c.pedidos.filter(p=>p.make).length;
     const cab=c.pedidos.filter(p=>p.cabelo).length, mu=c.pedidos.filter(p=>p.multimarca).length;
-    txt+=`👤 *${c.nome}*: ${t} pedidos | Make ${pct(m,t)}% | Cabelo ${pct(cab,t)}% | Multi ${pct(mu,t)}%\n`;
+    const combo=c.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
+    txt+=`👤 *${c.nome}*: ${t} ped. | Make ${pct(m,t)}% | Cab. ${pct(cab,t)}% | Multi ${pct(mu,t)}% | 💎 ${combo}\n`;
   });
   txt+=`\n_Canal VD Mossoró_`;
   navigator.clipboard.writeText(txt).then(()=>showToast('📋 Resumo copiado!'));
