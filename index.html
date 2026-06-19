@@ -378,11 +378,16 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       <h2>📈 Resultado Geral</h2>
       <span class="data-label" id="labelDataGeral"></span>
     </div>
-    <div class="cards-totais" style="grid-template-columns:repeat(5,1fr)">
+    <div class="cards-totais" style="grid-template-columns:repeat(3,1fr)">
       <div class="card-total ct-total">
         <span class="num" id="gtTotal">0</span>
         <div class="lbl">Pedidos Totais</div>
         <div class="pct">100%</div>
+      </div>
+      <div class="card-total" style="background:#F0FDF4;border:2px solid #86EFAC">
+        <span class="num" id="gtComIndicador" style="color:#16A34A">0</span>
+        <div class="lbl" style="color:#16A34A">✅ Com Indicador</div>
+        <div class="pct" id="gtComIndicadorPct" style="color:#16A34A">0%</div>
       </div>
       <div class="card-total ct-make">
         <span class="num" id="gtMake">0</span>
@@ -394,15 +399,15 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
         <div class="lbl">💆 Cabelo</div>
         <div class="pct" id="gtCabeloPct">0%</div>
       </div>
-      <div class="card-total ct-ambos">
-        <span class="num" id="gtAmbos">0</span>
-        <div class="lbl">💎 Combo Diamante</div>
-        <div class="pct" id="gtAmbosPct">0%</div>
-      </div>
       <div class="card-total" style="background:var(--multi-fundo);border:2px solid var(--multi-cor)15">
         <span class="num" id="gtMulti" style="color:var(--multi-cor)">0</span>
         <div class="lbl" style="color:var(--multi-cor)">🏷️ Multimarca</div>
         <div class="pct" id="gtMultiPct" style="color:var(--multi-cor)">0%</div>
+      </div>
+      <div class="card-total ct-ambos">
+        <span class="num" id="gtAmbos">0</span>
+        <div class="lbl">💎 Combo Diamante</div>
+        <div class="pct" id="gtAmbosPct">0%</div>
       </div>
     </div>
     <div class="barra-geral">
@@ -967,9 +972,12 @@ function atualizarPainelGeral() {
   const tMake=todos.filter(p=>p.make).length;
   const tCabelo=todos.filter(p=>p.cabelo).length;
   const tMulti=todos.filter(p=>p.multimarca).length;
+  const tComIndicador=todos.filter(p=>p.make||p.cabelo||p.multimarca).length;
   const pct=v=>total?Math.round(v/total*100):0;
 
   document.getElementById('gtTotal').textContent=total;
+  document.getElementById('gtComIndicador').textContent=tComIndicador;
+  document.getElementById('gtComIndicadorPct').textContent=pct(tComIndicador)+'%';
   document.getElementById('gtMake').textContent=tMake;
   document.getElementById('gtCabelo').textContent=tCabelo;
   document.getElementById('gtAmbos').textContent=nCombo;
@@ -1024,11 +1032,18 @@ function atualizarRanking() {
   const totalGeral = estado.caixas.flatMap(c=>c.pedidos).length;
   if(!totalGeral){rl.innerHTML='<div style="font-size:13px;color:#9CA3AF;text-align:center;padding:20px">Nenhum pedido registrado ainda</div>';return;}
 
-  const medalhas=['💎','🥇','🥈','🥉'];
+  // Atribui posições considerando empates
+  let posAtual = 1;
+  dados.forEach((d,i)=>{
+    if(i>0 && d.score===dados[i-1].score) d.pos=dados[i-1].pos;
+    else d.pos=posAtual;
+    posAtual++;
+  });
+  const medalhas={1:'💎',2:'🥇',3:'🥈',4:'🥉'};
   rl.innerHTML = `<div class="ranking-subtitle">Pontuação: itens incrementados no caixa (✨)</div>` +
-    dados.map((d,i)=>`
-    <div class="ranking-item pos-${i+1}">
-      <span class="medal">${medalhas[i]||String(i+1)}</span>
+    dados.map(d=>`
+    <div class="ranking-item pos-${Math.min(d.pos,4)}">
+      <span class="medal">${medalhas[d.pos]||String(d.pos)}</span>
       <span class="rk-nome">${d.nome}</span>
       <div class="rk-stats">
         <span class="rk-chip rk-total">${d.total} ped.</span>
