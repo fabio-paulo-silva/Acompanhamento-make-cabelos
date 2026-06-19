@@ -224,7 +224,9 @@ function getPedidosDia(p) {
         id:          String(row[0]),
         caixa:       String(row[5]),
         numPedido:   String(row[6]),
-        hora:        String(row[7]),
+        hora:        row[7] instanceof Date
+                       ? Utilities.formatDate(row[7], 'America/Fortaleza', 'HH:mm')
+                       : String(row[7]),
         make:        row[8] === 'SIM',
         cabelo:      row[9] === 'SIM',
         multimarca:  row[10] === 'SIM',
