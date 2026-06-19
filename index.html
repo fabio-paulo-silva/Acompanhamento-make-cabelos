@@ -970,7 +970,6 @@ function atualizarPainelGeral() {
   const tComIndicador=todos.filter(p=>p.make||p.cabelo||p.multimarca).length;
   const pct=v=>total?Math.round(v/total*100):0;
 
-  document.getElementById('gtTotal').textContent=total;
   document.getElementById('gtComIndicador').textContent=tComIndicador;
   document.getElementById('gtComIndicadorPct').textContent=pct(tComIndicador)+'%';
   document.getElementById('gtMake').textContent=tMake;
