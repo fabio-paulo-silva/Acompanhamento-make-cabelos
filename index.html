@@ -105,9 +105,30 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .ranking h2{font-size:16px;color:var(--azul-escuro);font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
 .ranking-list{display:flex;flex-direction:column;gap:8px}
 .ranking-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid var(--borda);background:var(--bg)}
-.ranking-item.pos-1{background:linear-gradient(90deg,#FEF9C3,#FFFBEB);border-color:#FCD34D}
-.ranking-item.pos-2{background:linear-gradient(90deg,#F3F4F6,#FAFAFA);border-color:#D1D5DB}
-.ranking-item.pos-3{background:linear-gradient(90deg,#FEF3C7,#FFFBEB);border-color:#FCD34D88}
+.ranking-item.pos-1{background:linear-gradient(90deg,#EDE9FE,#F5F3FF);border-color:#7C3AED}
+.ranking-item.pos-2{background:linear-gradient(90deg,#FEF9C3,#FFFBEB);border-color:#FCD34D}
+.ranking-item.pos-3{background:linear-gradient(90deg,#F3F4F6,#FAFAFA);border-color:#D1D5DB}
+.ranking-item.pos-4{background:linear-gradient(90deg,#FEF3C7,#FFFBEB);border-color:#FCD34D88}
+.ranking-subtitle{font-size:11px;color:#9CA3AF;font-weight:600;margin-bottom:12px}
+
+/* PEDIDOS DO DIA */
+.pedidos-dia-wrap{padding:16px 20px 24px}
+.pedidos-dia-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.pedidos-dia-header h2{font-size:16px;color:var(--azul-escuro);font-weight:800;text-transform:uppercase;letter-spacing:.5px}
+.pedidos-table{width:100%;border-collapse:collapse;font-size:12px;background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.pedidos-table th{background:var(--azul-escuro);color:white;padding:8px 10px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.4px}
+.pedidos-table td{padding:7px 10px;border-bottom:1px solid var(--borda);vertical-align:middle}
+.pedidos-table tr:last-child td{border-bottom:none}
+.pedidos-table tr:hover td{background:#F8FAFC}
+.pd-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.pd-sim{background:#DCFCE7;color:#16A34A}
+.pd-nao{background:#F3F4F6;color:#9CA3AF}
+.pd-incr{background:#F0FDF4;color:#16A34A;border:1px solid #86EFAC}
+.pd-pedido{background:#EFF6FF;color:#1D4ED8}
+.pd-filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.pd-filtro{padding:5px 12px;border-radius:20px;border:1.5px solid var(--borda);font-size:12px;font-weight:600;cursor:pointer;background:white;color:#6B7280;transition:all .15s}
+.pd-filtro.ativo{background:var(--azul-escuro);color:white;border-color:var(--azul-escuro)}
+.pd-empty{text-align:center;padding:32px;color:#9CA3AF;font-size:13px}
 .medal{font-size:22px;width:28px;text-align:center;flex-shrink:0}
 .rk-nome{font-weight:700;font-size:14px;flex:1}
 .rk-stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -156,6 +177,13 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .btn-toggle.active-ambos{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 3px rgba(112,48,160,.15)}
 .btn-toggle.active-combo{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 4px rgba(112,48,160,.25)}
 .btn-toggle.active-multi{background:var(--multi-fundo);color:var(--multi-cor);border-color:var(--multi-cor);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+/* 3 estados: já veio / incrementado no caixa */
+.btn-toggle.st-pedido-make{background:var(--make-fundo);color:var(--make-cor);border-color:var(--make-cor)}
+.btn-toggle.st-pedido-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor);border-color:var(--cabelo-cor)}
+.btn-toggle.st-pedido-multi{background:var(--multi-fundo);color:var(--multi-cor);border-color:var(--multi-cor)}
+.btn-toggle.st-pedido-combo{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor)}
+.btn-toggle.st-caixa{background:#F0FDF4;color:#16A34A;border-color:#16A34A;box-shadow:0 0 0 3px rgba(22,163,74,.25)}
+.tag-orig{font-size:9px;font-weight:800;margin-top:1px;letter-spacing:.3px}
 
 .btn-registrar{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.3px}
 .btn-registrar:hover{opacity:.88}
@@ -244,6 +272,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 <!-- ABAS -->
 <div class="tabs">
   <button class="tab-btn active" onclick="setTab('acompanhamento')">📊 Acompanhamento</button>
+  <button class="tab-btn" onclick="setTab('pedidos')">📋 Pedidos do Dia</button>
   <div style="margin-left:auto;display:flex;align-items:center;padding:0 12px;gap:8px">
     <span id="syncStatus" style="font-size:11px;color:#16A34A">● Sheets conectado</span>
   </div>
@@ -438,7 +467,24 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 
 </div><!-- /tab-acompanhamento -->
 
-<!-- ===== ABA CONFIGURAÇÕES ===== -->
+<!-- ===== ABA PEDIDOS DO DIA ===== -->
+<div id="tab-pedidos" class="tab-content">
+  <div class="pedidos-dia-wrap">
+    <div class="pedidos-dia-header">
+      <h2>📋 Todos os Pedidos do Dia</h2>
+      <span id="pdTotal" style="font-size:13px;color:#6B7280;font-weight:600"></span>
+    </div>
+    <div class="pd-filtros">
+      <button class="pd-filtro ativo" onclick="filtrarPedidosDia('todos',this)">Todos</button>
+      <button class="pd-filtro" onclick="filtrarPedidosDia('incr',this)">✨ Incrementados no caixa</button>
+      <button class="pd-filtro" onclick="filtrarPedidosDia('make',this)">💄 Make</button>
+      <button class="pd-filtro" onclick="filtrarPedidosDia('cabelo',this)">💆 Cabelo</button>
+      <button class="pd-filtro" onclick="filtrarPedidosDia('multi',this)">🏷️ Multimarca</button>
+      <button class="pd-filtro" onclick="filtrarPedidosDia('combo',this)">💎 Combo</button>
+    </div>
+    <div id="pedidosDiaContent"></div>
+  </div>
+</div>
 
 <div class="rodape">Canal VD Mossoró · Grupo Boticário · <span id="rodapeHora"></span></div>
 <div id="toast"></div>
@@ -510,14 +556,14 @@ function setTab(tab) {
     const txt = b.textContent.toLowerCase();
     b.classList.toggle('active',
       (tab==='acompanhamento' && txt.includes('acompa')) ||
-      (tab==='caixas' && txt.includes('caixa')) ||
-      (tab==='config' && txt.includes('config'))
+      (tab==='pedidos' && txt.includes('pedidos'))
     );
   });
-  ['acompanhamento'].forEach(t=>{
+  ['acompanhamento','pedidos'].forEach(t=>{
     const el = document.getElementById('tab-'+t);
     if(el) el.classList.toggle('active', t===tab);
   });
+  if(tab==='pedidos') renderizarPedidosDia('todos');
 }
 
 // ====================================================
@@ -692,7 +738,7 @@ function criarCard(caixa) {
   const nCombo = caixa.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
   const nMultiSolo = caixa.pedidos.filter(p=>p.multimarca&&!p.make&&!p.cabelo).length;
   const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
-  const nIncrCaixa = caixa.pedidos.filter(p=>p.origem==='caixa').length;
+  const nIncrCaixa = caixa.pedidos.filter(p=>p.makeOrigem==='caixa'||p.cabeloOrigem==='caixa'||p.multimarcaOrigem==='caixa'||p.origem==='caixa').length;
   const pMake = total ? Math.round(caixa.pedidos.filter(p=>p.make).length/total*100) : 0;
   const pCabelo = total ? Math.round(caixa.pedidos.filter(p=>p.cabelo).length/total*100) : 0;
   const pMulti = total ? Math.round(caixa.pedidos.filter(p=>p.multimarca).length/total*100) : 0;
@@ -722,7 +768,10 @@ function criarCard(caixa) {
       <div class="form-registro">
         <div class="fl">Nº do Pedido</div>
         <input class="input-pedido" type="text" id="numped-${caixa.id}" placeholder="Ex: 123456" maxlength="20">
-        <div class="fl">Incrementação</div>
+        <div class="fl" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Incrementação</span>
+          <span style="font-size:10px;color:#9CA3AF;font-weight:600">1× 📦 já veio &nbsp;·&nbsp; 2× ✨ incr.</span>
+        </div>
         <div class="toggles">
           <button class="btn-toggle" id="tmake-${caixa.id}" onclick="toggleIncr('${caixa.id}','make')">
             <span class="ico">💄</span>Make
@@ -737,11 +786,6 @@ function criarCard(caixa) {
             <span class="ico">💎</span>Combo Diamante
           </button>
         </div>
-        <div class="fl" style="margin-top:4px">Como veio este pedido?</div>
-        <div class="origem-row">
-          <button class="btn-origem active-pedido" id="orig-pedido-${caixa.id}" onclick="setOrigem('${caixa.id}','pedido')">📦 Já veio com os itens</button>
-          <button class="btn-origem" id="orig-caixa-${caixa.id}" onclick="setOrigem('${caixa.id}','caixa')">✨ Incrementei no caixa</button>
-        </div>
         <button class="btn-registrar" onclick="registrarPedido('${caixa.id}')">✔ Registrar Pedido</button>
       </div>
       <div class="historico" id="hist-${caixa.id}">${renderHistorico(caixa)}</div>
@@ -755,83 +799,112 @@ function renderHistorico(caixa) {
   return [...caixa.pedidos].reverse().map(p=>{
     const tipo = p.make&&p.cabelo&&p.multimarca?'combo':p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':p.multimarca?'multi':'sem';
     const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💄+💆 Make+Cab.',combo:'💎 Combo Diamante',multi:'🏷️ Multimarca',sem:'Sem incr.'};
+    // Mostra quais itens foram adicionados no caixa
+    const incrItens=[];
+    if(p.makeOrigem==='caixa') incrItens.push('💄');
+    if(p.cabeloOrigem==='caixa') incrItens.push('💆');
+    if(p.multimarcaOrigem==='caixa') incrItens.push('🏷️');
+    const legacyCaixa = !p.makeOrigem && p.origem==='caixa';
+    const incrTag = incrItens.length
+      ? `<span class="badge-orig-caixa">✨ ${incrItens.join('')}</span>`
+      : legacyCaixa ? `<span class="badge-orig-caixa">✨ incr.</span>` : '';
     return `<div class="historico-item">
       <span class="historico-hora">${p.hora}</span>
       <span class="historico-num">${p.numPedido||'—'}</span>
-      <span class="badge-hist ${tipo}">${lbl[tipo]}${p.origem==='caixa'?'<span class="badge-orig-caixa">✨ incr.</span>':''}</span>
+      <span class="badge-hist ${tipo}">${lbl[tipo]}${incrTag}</span>
       <button class="btn-del-pedido" onclick="deletarPedido('${caixa.id}','${p.id}')" title="Apagar pedido">✕</button>
     </div>`;
   }).join('');
 }
 
 // ====================================================
-// TOGGLE / REGISTRO
+// TOGGLE 3 ESTADOS: null → 'pedido' → 'caixa' → null
 // ====================================================
 const toggleState = {};
-const origemState = {}; // 'pedido' | 'caixa'
 
 function toggleIncr(id, tipo) {
-  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
-  toggleState[id][tipo] = !toggleState[id][tipo];
-  // Se ativou make+cabelo individualmente, reflete no ambos
+  if (!toggleState[id]) toggleState[id]={make:null,cabelo:null,multimarca:null};
+  const cur = toggleState[id][tipo];
+  toggleState[id][tipo] = !cur ? 'pedido' : cur==='pedido' ? 'caixa' : null;
   syncBtnEstado(id);
 }
 
 function toggleCombo(id) {
-  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
-  const ligado = toggleState[id].make && toggleState[id].cabelo && toggleState[id].multimarca;
-  toggleState[id].make = !ligado;
-  toggleState[id].cabelo = !ligado;
-  toggleState[id].multimarca = !ligado;
+  if (!toggleState[id]) toggleState[id]={make:null,cabelo:null,multimarca:null};
+  const s = toggleState[id];
+  const allSet = s.make && s.cabelo && s.multimarca;
+  const allCaixa = s.make==='caixa' && s.cabelo==='caixa' && s.multimarca==='caixa';
+  if (!allSet) toggleState[id]={make:'pedido',cabelo:'pedido',multimarca:'pedido'};
+  else if (allCaixa) toggleState[id]={make:null,cabelo:null,multimarca:null};
+  else toggleState[id]={make:'caixa',cabelo:'caixa',multimarca:'caixa'};
   syncBtnEstado(id);
 }
 
 function syncBtnEstado(id) {
-  const s = toggleState[id]||{make:false,cabelo:false,multimarca:false};
-  const bm = document.getElementById(`tmake-${id}`);
-  const bc = document.getElementById(`tcabelo-${id}`);
-  const bx = document.getElementById(`tmulti-${id}`);
-  const bd = document.getElementById(`tcombo-${id}`);
-  const isCombo = s.make && s.cabelo && s.multimarca;
-  if(bm) bm.className='btn-toggle'+(s.make&&!isCombo?' active-make':isCombo?' active-combo':'');
-  if(bc) bc.className='btn-toggle'+(s.cabelo&&!isCombo?' active-cabelo':isCombo?' active-combo':'');
-  if(bx) bx.className='btn-toggle'+(s.multimarca&&!isCombo?' active-multi':isCombo?' active-combo':'');
-  if(bd) bd.className='btn-toggle'+(isCombo?' active-combo':'');
-}
-
-function setOrigem(id, val) {
-  origemState[id] = val;
-  const bp = document.getElementById(`orig-pedido-${id}`);
-  const bc = document.getElementById(`orig-caixa-${id}`);
-  if(bp) bp.className = 'btn-origem' + (val==='pedido'?' active-pedido':'');
-  if(bc) bc.className = 'btn-origem' + (val==='caixa'?' active-caixa':'');
+  const s = toggleState[id]||{make:null,cabelo:null,multimarca:null};
+  const ITEMS = [
+    {key:'make',   btnId:`tmake-${id}`,  ico:'💄', label:'Make',          cls:'st-pedido-make'},
+    {key:'cabelo', btnId:`tcabelo-${id}`,ico:'💆', label:'Cabelo',        cls:'st-pedido-cabelo'},
+    {key:'multimarca',btnId:`tmulti-${id}`,ico:'🏷️',label:'Multimarca',  cls:'st-pedido-multi'},
+  ];
+  ITEMS.forEach(({key,btnId,ico,label,cls})=>{
+    const btn=document.getElementById(btnId); if(!btn) return;
+    const st=s[key];
+    if(st==='caixa')
+      {btn.className='btn-toggle st-caixa';btn.innerHTML=`<span class="ico">✨</span>${label}<span class="tag-orig">incr. caixa</span>`;}
+    else if(st==='pedido')
+      {btn.className=`btn-toggle ${cls}`;btn.innerHTML=`<span class="ico">${ico}</span>${label}<span class="tag-orig">📦 pedido</span>`;}
+    else
+      {btn.className='btn-toggle';btn.innerHTML=`<span class="ico">${ico}</span>${label}`;}
+  });
+  const bd=document.getElementById(`tcombo-${id}`);
+  if(bd){
+    const allSet=s.make&&s.cabelo&&s.multimarca;
+    const allCaixa=s.make==='caixa'&&s.cabelo==='caixa'&&s.multimarca==='caixa';
+    bd.className='btn-toggle'+(allCaixa?' st-caixa':allSet?' st-pedido-combo active-combo':'');
+    bd.innerHTML=allCaixa?`<span class="ico">✨</span>Combo Diamante<span class="tag-orig">incr. caixa</span>`
+      :allSet?`<span class="ico">💎</span>Combo Diamante<span class="tag-orig">📦 pedido</span>`
+      :`<span class="ico">💎</span>Combo Diamante`;
+  }
 }
 
 function registrarPedido(id) {
-  const ts = toggleState[id]||{make:false,cabelo:false,multimarca:false};
+  const ts = toggleState[id]||{make:null,cabelo:null,multimarca:null};
   const numPedido = (document.getElementById(`numped-${id}`).value||'').trim();
   const agora = new Date();
   const hora = agora.toTimeString().substring(0,5);
   const caixa = estado.caixas.find(c=>c.id===id);
   const pedidoId = Date.now().toString();
 
+  const hasMake = !!ts.make, hasCabelo = !!ts.cabelo, hasMulti = !!ts.multimarca;
+
   let tipo;
-  if(ts.make && ts.cabelo && ts.multimarca) tipo = 'Combo Diamante';
+  if(hasMake && hasCabelo && hasMulti) tipo = 'Combo Diamante';
   else {
-    const partes = [];
-    if(ts.make) partes.push('Make');
-    if(ts.cabelo) partes.push('Cabelo');
-    if(ts.multimarca) partes.push('Multimarca');
+    const partes=[];
+    if(hasMake) partes.push('Make');
+    if(hasCabelo) partes.push('Cabelo');
+    if(hasMulti) partes.push('Multimarca');
     tipo = partes.length ? partes.join('+') : 'Sem incrementação';
   }
 
-  const origem = origemState[id] || 'pedido';
-  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo, multimarca:ts.multimarca, origem});
-  toggleState[id]={make:false,cabelo:false,multimarca:false};
-  origemState[id]='pedido';
+  // Itens adicionados no caixa (✨)
+  const incrItens=[];
+  if(ts.make==='caixa') incrItens.push('Make');
+  if(ts.cabelo==='caixa') incrItens.push('Cabelo');
+  if(ts.multimarca==='caixa') incrItens.push('Multimarca');
+  const origemTexto = incrItens.length
+    ? `Incr. no Caixa: ${incrItens.join('+')}`
+    : hasMake||hasCabelo||hasMulti ? 'Já veio no Pedido' : '';
+
+  caixa.pedidos.push({
+    id:pedidoId, numPedido, hora,
+    make:hasMake, cabelo:hasCabelo, multimarca:hasMulti,
+    makeOrigem: ts.make||null, cabeloOrigem: ts.cabelo||null, multimarcaOrigem: ts.multimarca||null,
+  });
+  toggleState[id]={make:null,cabelo:null,multimarca:null};
   document.getElementById(`numped-${id}`).value='';
   syncBtnEstado(id);
-  setOrigem(id, 'pedido');
   salvarEstado();
 
   const old = document.getElementById(`card-${id}`);
@@ -848,11 +921,11 @@ function registrarPedido(id) {
     caixa: caixa.nome,
     numPedido,
     hora,
-    make: ts.make,
-    cabelo: ts.cabelo,
-    multimarca: ts.multimarca,
+    make: hasMake,
+    cabelo: hasCabelo,
+    multimarca: hasMulti,
     incrementacao: tipo,
-    origem: origem === 'caixa' ? 'Incrementado no Caixa' : 'Já veio no Pedido',
+    origem: origemTexto,
   });
 }
 
@@ -930,37 +1003,118 @@ function atualizarPainelGeral() {
 }
 
 // ====================================================
-// RANKING
+// RANKING — contabiliza apenas incrementações no caixa
 // ====================================================
 function atualizarRanking() {
   const rl = document.getElementById('rankingList');
   const dados = estado.caixas.map(c=>{
-    const t=c.pedidos.length;
-    const m=c.pedidos.filter(p=>p.make).length;
-    const cab=c.pedidos.filter(p=>p.cabelo).length;
-    const multi=c.pedidos.filter(p=>p.multimarca).length;
-    const combo=c.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
-    const score=t?Math.round((m+cab+multi)/t/3*100):0;
-    return {nome:c.nome, total:t, make:m, cabelo:cab, multi, combo, score};
-  }).sort((a,b)=>b.score-a.score||b.total-a.total);
+    const total = c.pedidos.length;
+    const nMakeIncr    = c.pedidos.filter(p=>p.makeOrigem==='caixa').length;
+    const nCabeloIncr  = c.pedidos.filter(p=>p.cabeloOrigem==='caixa').length;
+    const nMultiIncr   = c.pedidos.filter(p=>p.multimarcaOrigem==='caixa').length;
+    // compatibilidade com pedidos antigos (origem='caixa' sem detalhamento por item)
+    const nLegacy      = c.pedidos.filter(p=>!p.makeOrigem && p.origem==='caixa').length;
+    const nIncrPed     = c.pedidos.filter(p=>
+      p.makeOrigem==='caixa'||p.cabeloOrigem==='caixa'||p.multimarcaOrigem==='caixa'||(!p.makeOrigem&&p.origem==='caixa')
+    ).length;
+    const score = nMakeIncr + nCabeloIncr + nMultiIncr + nLegacy;
+    return {nome:c.nome, total, nIncrPed, nMakeIncr, nCabeloIncr, nMultiIncr, score};
+  }).sort((a,b)=>b.score-a.score||b.nIncrPed-a.nIncrPed||b.total-a.total);
 
   const totalGeral = estado.caixas.flatMap(c=>c.pedidos).length;
   if(!totalGeral){rl.innerHTML='<div style="font-size:13px;color:#9CA3AF;text-align:center;padding:20px">Nenhum pedido registrado ainda</div>';return;}
 
-  const medalhas=['🥇','🥈','🥉'];
-  rl.innerHTML = dados.map((d,i)=>`
+  const medalhas=['💎','🥇','🥈','🥉'];
+  rl.innerHTML = `<div class="ranking-subtitle">Pontuação: itens incrementados no caixa (✨)</div>` +
+    dados.map((d,i)=>`
     <div class="ranking-item pos-${i+1}">
-      <span class="medal">${medalhas[i]||'  '}</span>
+      <span class="medal">${medalhas[i]||String(i+1)}</span>
       <span class="rk-nome">${d.nome}</span>
       <div class="rk-stats">
         <span class="rk-chip rk-total">${d.total} ped.</span>
-        <span class="rk-chip rk-make">💄 ${d.total?Math.round(d.make/d.total*100):0}%</span>
-        <span class="rk-chip rk-cabelo">💆 ${d.total?Math.round(d.cabelo/d.total*100):0}%</span>
-        <span class="rk-chip" style="background:var(--multi-fundo);color:var(--multi-cor)">🏷️ ${d.total?Math.round(d.multi/d.total*100):0}%</span>
-        <span class="rk-chip" style="background:var(--ambos-fundo);color:var(--ambos-cor)">💎 ${d.combo}</span>
+        <span class="rk-chip" style="background:#F0FDF4;color:#16A34A">✨ ${d.nIncrPed} pedidos</span>
+        <span class="rk-chip rk-make">💄 ${d.nMakeIncr}</span>
+        <span class="rk-chip rk-cabelo">💆 ${d.nCabeloIncr}</span>
+        <span class="rk-chip" style="background:var(--multi-fundo);color:var(--multi-cor)">🏷️ ${d.nMultiIncr}</span>
       </div>
-      <span class="rk-score">${d.score}%</span>
+      <span class="rk-score">${d.score}</span>
     </div>`).join('');
+}
+
+// ====================================================
+// PEDIDOS DO DIA
+// ====================================================
+let _filtroAtual = 'todos';
+
+function filtrarPedidosDia(filtro, btn) {
+  _filtroAtual = filtro;
+  document.querySelectorAll('.pd-filtro').forEach(b=>b.classList.remove('ativo'));
+  if(btn) btn.classList.add('ativo');
+  renderizarPedidosDia(filtro);
+}
+
+function renderizarPedidosDia(filtro) {
+  filtro = filtro || _filtroAtual || 'todos';
+  const content = document.getElementById('pedidosDiaContent');
+  if(!content || !estado) return;
+
+  // Monta lista flat: {hora, caixa, numPedido, make, cabelo, multi, makeOrigem, cabeloOrigem, multimarcaOrigem, origem}
+  let todos = [];
+  estado.caixas.forEach(c=>{
+    c.pedidos.forEach(p=>{
+      todos.push({...p, caixaNome: c.nome});
+    });
+  });
+
+  // Ordena por hora desc
+  todos.sort((a,b)=>b.hora.localeCompare(a.hora));
+
+  // Aplica filtro
+  const isIncrCaixa = p => p.makeOrigem==='caixa'||p.cabeloOrigem==='caixa'||p.multimarcaOrigem==='caixa'||(!p.makeOrigem&&p.origem==='caixa');
+  if(filtro==='incr')  todos = todos.filter(isIncrCaixa);
+  else if(filtro==='make')  todos = todos.filter(p=>p.make);
+  else if(filtro==='cabelo') todos = todos.filter(p=>p.cabelo);
+  else if(filtro==='multi') todos = todos.filter(p=>p.multimarca);
+  else if(filtro==='combo') todos = todos.filter(p=>p.make&&p.cabelo&&p.multimarca);
+
+  document.getElementById('pdTotal').textContent = `${todos.length} pedido${todos.length!==1?'s':''}`;
+
+  if(!todos.length){
+    content.innerHTML='<div class="pd-empty">Nenhum pedido encontrado para este filtro.</div>';
+    return;
+  }
+
+  const badgeSim = '<span class="pd-badge pd-sim">✓ SIM</span>';
+  const badgeNao = '<span class="pd-badge pd-nao">—</span>';
+
+  const linhas = todos.map(p=>{
+    const mko = p.makeOrigem==='caixa'?'<span class="pd-badge pd-incr">✨</span>':p.makeOrigem==='pedido'?'<span class="pd-badge pd-pedido">📦</span>':'';
+    const cbo = p.cabeloOrigem==='caixa'?'<span class="pd-badge pd-incr">✨</span>':p.cabeloOrigem==='pedido'?'<span class="pd-badge pd-pedido">📦</span>':'';
+    const muo = p.multimarcaOrigem==='caixa'?'<span class="pd-badge pd-incr">✨</span>':p.multimarcaOrigem==='pedido'?'<span class="pd-badge pd-pedido">📦</span>':'';
+    const legacyTag = !p.makeOrigem && p.origem==='caixa'?'<span class="pd-badge pd-incr">✨ incr.</span>':'';
+    const tipo = p.make&&p.cabelo&&p.multimarca?'💎 Combo':p.make&&p.cabelo?'💄+💆':p.make?'💄':p.cabelo?'💆':p.multimarca?'🏷️':'—';
+    return `<tr>
+      <td style="color:#9CA3AF;font-size:11px">${p.hora}</td>
+      <td><strong>${p.caixaNome}</strong></td>
+      <td style="font-family:monospace;color:var(--azul-escuro)">${p.numPedido||'—'}</td>
+      <td>${tipo}</td>
+      <td>${p.make?(mko||badgeSim):badgeNao}</td>
+      <td>${p.cabelo?(cbo||badgeSim):badgeNao}</td>
+      <td>${p.multimarca?(muo||badgeSim):badgeNao}</td>
+      <td>${legacyTag||(!p.makeOrigem&&!p.cabeloOrigem&&!p.multimarcaOrigem?'':
+        [p.makeOrigem==='caixa'?'💄':null,p.cabeloOrigem==='caixa'?'💆':null,p.multimarcaOrigem==='caixa'?'🏷️':null].filter(Boolean).map(e=>`<span class="pd-badge pd-incr">✨${e}</span>`).join('')
+        ||[p.makeOrigem==='pedido'?'💄':null,p.cabeloOrigem==='pedido'?'💆':null,p.multimarcaOrigem==='pedido'?'🏷️':null].filter(Boolean).map(e=>`<span class="pd-badge pd-pedido">📦${e}</span>`).join('')
+      )}</td>
+    </tr>`;
+  }).join('');
+
+  content.innerHTML = `<div style="overflow-x:auto"><table class="pedidos-table">
+    <thead><tr>
+      <th>Hora</th><th>Caixa</th><th>Nº Pedido</th><th>Tipo</th>
+      <th>💄 Make</th><th>💆 Cabelo</th><th>🏷️ Multi</th><th>Origem</th>
+    </tr></thead>
+    <tbody>${linhas}</tbody>
+  </table></div>`;
 }
 
 // ====================================================
