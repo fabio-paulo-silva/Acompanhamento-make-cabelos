@@ -237,9 +237,8 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 <div class="tabs">
   <button class="tab-btn active" onclick="setTab('acompanhamento')">📊 Acompanhamento</button>
   <button class="tab-btn" onclick="setTab('caixas')">👤 Gerenciar Caixas</button>
-  <button class="tab-btn" onclick="setTab('config')">⚙️ Configurações</button>
   <div style="margin-left:auto;display:flex;align-items:center;padding:0 12px;gap:8px">
-    <span id="syncStatus" style="font-size:11px;color:#9CA3AF">● Sheets desconectado</span>
+    <span id="syncStatus" style="font-size:11px;color:#16A34A">● Sheets conectado</span>
   </div>
 </div>
 
@@ -465,41 +464,6 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 </div>
 
 <!-- ===== ABA CONFIGURAÇÕES ===== -->
-<div id="tab-config" class="tab-content">
-  <div class="cadastro-caixas">
-    <h2>⚙️ Configurações — Google Sheets</h2>
-
-    <div style="background:#F0FDF4;border:1.5px solid #86EFAC;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:13px;line-height:1.7;color:#14532D">
-      <strong>Como configurar a sincronização automática:</strong><br>
-      1. Abra sua planilha no Google Sheets<br>
-      2. Clique em <strong>Extensões → Apps Script</strong><br>
-      3. Cole o conteúdo do arquivo <strong>script_google_apps.gs</strong><br>
-      4. Clique em <strong>Implantar → Nova implantação → App da Web</strong><br>
-      5. Configure: <em>Executar como: Eu mesmo · Quem pode acessar: Qualquer pessoa</em><br>
-      6. Copie a URL gerada e cole abaixo
-    </div>
-
-    <div style="margin-bottom:14px">
-      <label style="font-size:12px;font-weight:700;color:var(--cinza-texto);display:block;margin-bottom:6px">URL do Apps Script (Web App)</label>
-      <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/..."
-        style="width:100%;border:2px solid var(--borda);border-radius:8px;padding:10px 12px;font-size:13px;font-family:monospace">
-    </div>
-
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn-salvar-caixas" onclick="salvarScriptUrl()">💾 Salvar URL</button>
-      <button class="btn-add-caixa" onclick="testarConexao()" style="background:var(--cabelo-cor)">🔌 Testar Conexão</button>
-    </div>
-
-    <div id="testeResultado" style="margin-top:14px;display:none;padding:12px 14px;border-radius:8px;font-size:13px;font-weight:600"></div>
-
-    <hr style="margin:20px 0;border:none;border-top:1px solid var(--borda)">
-
-    <div style="font-size:13px;font-weight:700;color:var(--azul-escuro);margin-bottom:10px">Status da sincronização</div>
-    <div style="display:flex;flex-direction:column;gap:8px" id="syncLog">
-      <div style="font-size:12px;color:#9CA3AF">Nenhum envio realizado ainda.</div>
-    </div>
-  </div>
-</div>
 
 <div class="rodape">Canal VD Mossoró · Grupo Boticário · <span id="rodapeHora"></span></div>
 <div id="toast"></div>
@@ -579,10 +543,6 @@ function setTab(tab) {
     document.getElementById('tab-'+t).classList.toggle('active', t===tab);
   });
   if (tab==='caixas') renderCaixasForm();
-  if (tab==='config') {
-    const url = localStorage.getItem('vd_script_url')||'';
-    document.getElementById('scriptUrlInput').value = url;
-  }
 }
 
 // ====================================================
@@ -630,8 +590,6 @@ function inicializar() {
   const labelHoje = document.getElementById('labelDataHoje');
   if (labelHoje) labelHoje.textContent = fData(hoje);
   // Carrega URL do script salva
-  SCRIPT_URL = localStorage.getItem('vd_script_url') || '';
-  atualizarStatusSync();
   carregarDia(erAtual, hoje);
   renderizar();
   setInterval(atualizarRelogio, 1000);
@@ -1032,77 +990,6 @@ function salvarCaixas() {
 // ====================================================
 // GOOGLE SHEETS SYNC
 // ====================================================
-function salvarScriptUrl() {
-  const url = document.getElementById('scriptUrlInput').value.trim();
-  if(!url.startsWith('https://script.google.com')) {
-    showToast('❌ URL inválida — deve começar com https://script.google.com');
-    return;
-  }
-  SCRIPT_URL = url;
-  localStorage.setItem('vd_script_url', url);
-  atualizarStatusSync();
-  showToast('✔ URL salva! Clique em Testar Conexão.');
-}
-
-function atualizarStatusSync() {
-  const el = document.getElementById('syncStatus');
-  if(!el) return;
-  if(SCRIPT_URL) {
-    el.style.color = '#16A34A';
-    el.textContent = '● Sheets conectado';
-  } else {
-    el.style.color = '#9CA3AF';
-    el.textContent = '● Sheets desconectado';
-  }
-}
-
-function testarConexao() {
-  const url = document.getElementById('scriptUrlInput').value.trim();
-  const res = document.getElementById('testeResultado');
-  res.style.display = 'block';
-  res.style.background = '#FEF3C7';
-  res.style.color = '#92400E';
-  res.textContent = '⏳ Testando conexão...';
-
-  if(!url) { res.textContent = '❌ Cole a URL antes de testar.'; return; }
-
-  const cbName = 'vdping_' + Date.now();
-  const timer = setTimeout(() => {
-    delete window[cbName];
-    res.style.background = '#FEF2F2';
-    res.style.color = '#991B1B';
-    res.textContent = '❌ Timeout — verifique se a URL está correta e o script publicado como "Qualquer pessoa".';
-  }, 10000);
-
-  window[cbName] = function(data) {
-    clearTimeout(timer);
-    delete window[cbName];
-    if(data.status === 'ok') {
-      res.style.background = '#F0FDF4';
-      res.style.color = '#14532D';
-      res.textContent = '✅ ' + data.mensagem;
-      SCRIPT_URL = url;
-      localStorage.setItem('vd_script_url', url);
-      atualizarStatusSync();
-    } else {
-      res.style.background = '#FEF2F2';
-      res.style.color = '#991B1B';
-      res.textContent = '❌ ' + (data.mensagem||'Erro desconhecido');
-    }
-  };
-
-  const script = document.createElement('script');
-  script.src = `${url}?action=ping&callback=${cbName}`;
-  script.onerror = () => {
-    clearTimeout(timer);
-    delete window[cbName];
-    script.remove();
-    res.style.background = '#FEF2F2';
-    res.style.color = '#991B1B';
-    res.textContent = '❌ URL inválida ou script não publicado corretamente.';
-  };
-  document.body.appendChild(script);
-}
 
 function sheetsCall(payload, logMsg) {
   if(!SCRIPT_URL) return;
