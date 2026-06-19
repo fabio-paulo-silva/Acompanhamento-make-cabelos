@@ -214,7 +214,12 @@ function getPedidosDia(p) {
   const pedidos = [];
   for (let i = 1; i < dados.length; i++) {
     const row = dados[i];
-    if (String(row[3]).trim() === er && String(row[1]).trim() === dataAcomp) {
+    // Coluna B (data) pode ser objeto Date quando a célula tem formato de data no Sheets
+    const rowData = row[1] instanceof Date
+      ? Utilities.formatDate(row[1], 'America/Fortaleza', 'dd/MM/yyyy')
+      : String(row[1]).trim();
+    const rowER = String(row[3]).trim();
+    if (rowER === er && rowData === dataAcomp) {
       pedidos.push({
         id:          String(row[0]),
         caixa:       String(row[5]),
@@ -227,7 +232,7 @@ function getPedidosDia(p) {
       });
     }
   }
-  return { status: 'ok', pedidos };
+  return { status: 'ok', pedidos, debug_er: er, debug_data: dataAcomp };
 }
 
 // ----------------------------------------------------------------
