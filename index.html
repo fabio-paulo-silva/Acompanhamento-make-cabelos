@@ -635,13 +635,10 @@ function carregarDia(er, data, callback) {
 
   if (salvo) estado = salvo;
 
-  // Fase 2: busca pedidos do dia no Sheets e popula estado
-  const sincronizarPedidos = (callback) => {
-    mostrarLoadingCaixas(true, '⏳ Sincronizando pedidos do dia…');
+  // Sincroniza pedidos do Sheets em segundo plano (sem bloquear o render)
+  const sincronizarPedidosBackground = () => {
     carregarPedidosDiaSheets(er, fDataBR(data), (pedidosSheets) => {
-      mostrarLoadingCaixas(false);
       if (pedidosSheets.length > 0) {
-        // Sheets é a fonte de verdade — reconstrói pedidos por caixa
         estado.caixas.forEach(cx => { cx.pedidos = []; });
         pedidosSheets.forEach(p => {
           const cx = estado.caixas.find(c => c.nome === p.caixa);
@@ -656,10 +653,8 @@ function carregarDia(er, data, callback) {
           });
         });
         salvarEstado();
+        renderizar(); // re-renderiza só se veio dado novo
       }
-      // Se Sheets retornou vazio, mantém localStorage (fallback offline)
-      migrateEstado();
-      if (callback) callback();
     });
   };
 
@@ -667,9 +662,10 @@ function carregarDia(er, data, callback) {
   if (semCaixas || caixasAntigas) {
     mostrarLoadingCaixas(true, '⏳ Carregando caixas da planilha…');
     carregarCaixasSheets(er, (nomes) => {
+      mostrarLoadingCaixas(false);
       if (nomes.length === 0 && salvo) {
-        // Sheets não retornou caixas — usa o que tem e tenta pedidos mesmo assim
-        sincronizarPedidos(callback);
+        migrateEstado(); if (callback) callback();
+        sincronizarPedidosBackground();
         return;
       }
       const pedidosAntigos = salvo ? salvo.caixas : [];
@@ -680,12 +676,17 @@ function carregarDia(er, data, callback) {
       if (!estado) estado = estadoInicial(er, data, nomes);
       else { estado.caixas = novasCaixas; estado.er = er; estado.loja = (ER_INFO[er]||{nome:er}).nome; }
       salvarEstado();
-      sincronizarPedidos(callback);
+      migrateEstado();
+      if (callback) callback(); // renderiza com caixas vazias primeiro
+      sincronizarPedidosBackground(); // depois sincroniza pedidos em background
     });
     return;
   }
 
-  sincronizarPedidos(callback);
+  // Tem localStorage válido: renderiza imediatamente e sincroniza em background
+  migrateEstado();
+  if (callback) callback();
+  sincronizarPedidosBackground();
 }
 
 function migrateEstado() {
