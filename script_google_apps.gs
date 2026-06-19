@@ -26,8 +26,9 @@ const CABECALHO = [
 // Ponto de entrada — chamado pelo app HTML via JSONP (GET)
 // ----------------------------------------------------------------
 function doGet(e) {
-  const params = e.parameter;
-  const action = params.action;
+  // Proteção caso e ou e.parameter seja null
+  const params = (e && e.parameter) ? e.parameter : {};
+  const action = params.action || '';
   const callback = params.callback || '';
 
   let resultado;
@@ -38,8 +39,11 @@ function doGet(e) {
       resultado = zerarRegistros(params);
     } else if (action === 'ping') {
       resultado = { status: 'ok', mensagem: 'Conexão estabelecida com sucesso!' };
+    } else if (action === 'debug') {
+      // Endpoint de diagnóstico — retorna tudo que o script recebeu
+      resultado = { status: 'ok', params: params, keys: Object.keys(params) };
     } else {
-      resultado = { status: 'erro', mensagem: 'Ação não reconhecida: ' + action };
+      resultado = { status: 'erro', mensagem: 'Ação não reconhecida: "' + action + '"', params_recebidos: params };
     }
   } catch (err) {
     resultado = { status: 'erro', mensagem: err.message };
