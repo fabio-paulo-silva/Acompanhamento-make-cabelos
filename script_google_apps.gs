@@ -19,6 +19,7 @@ const CABECALHO = [
   'Com Cabelo',
   'Com Multimarca',
   'Tipo de Incrementação',
+  'Origem',
 ];
 
 // ----------------------------------------------------------------
@@ -38,6 +39,8 @@ function doGet(e) {
       resultado = zerarRegistros(params);
     } else if (action === 'deletar') {
       resultado = deletarPedido(params);
+    } else if (action === 'getCaixas') {
+      resultado = getCaixas(params);
     } else if (action === 'ping') {
       resultado = { status: 'ok', mensagem: 'Conexão estabelecida com sucesso!' };
     } else if (action === 'debug') {
@@ -89,6 +92,7 @@ function garantirAba() {
     aba.setColumnWidth(10, 100); // Com Cabelo
     aba.setColumnWidth(11, 120); // Com Multimarca
     aba.setColumnWidth(12, 160); // Tipo Incrementação
+    aba.setColumnWidth(13, 180); // Origem
   }
 
   return aba;
@@ -117,6 +121,7 @@ function registrarPedido(p) {
     p.cabelo === 'true' ? 'SIM' : 'NÃO',
     p.multimarca === 'true' ? 'SIM' : 'NÃO',
     p.incrementacao || '',
+    p.origem       || '',
   ];
 
   aba.appendRow(linha);
@@ -189,6 +194,28 @@ function zerarRegistros(p) {
     status: 'ok',
     mensagem: `${removidos} registro(s) removido(s) para ER ${er} em ${dataAcomp}.`
   };
+}
+
+// ----------------------------------------------------------------
+// Retorna lista de caixas de um ER a partir da aba "Caixas"
+// ----------------------------------------------------------------
+function getCaixas(p) {
+  const er = String(p.er || '').trim();
+  if (!er) return { status: 'erro', mensagem: 'ER obrigatório.' };
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName('Caixas');
+  if (!aba) return { status: 'erro', mensagem: 'Aba "Caixas" não encontrada na planilha.' };
+
+  const dados = aba.getDataRange().getValues();
+  const caixas = [];
+  for (let i = 1; i < dados.length; i++) {
+    const linhaER = String(dados[i][0]).trim();
+    const nome    = String(dados[i][1]).trim();
+    if (linhaER === er && nome) caixas.push(nome);
+  }
+
+  return { status: 'ok', caixas };
 }
 
 // ----------------------------------------------------------------

@@ -137,6 +137,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .stat-combo{background:var(--ambos-fundo);color:var(--ambos-cor)}
 .stat-multi{background:var(--multi-fundo);color:var(--multi-cor)}
 
+.card-loading{background:white;border-radius:14px;border:1px solid var(--borda);box-shadow:0 2px 10px rgba(0,0,0,.07);padding:32px;text-align:center;color:#9CA3AF;font-size:13px;font-weight:600;grid-column:1/-1}
 .barra-caixa{height:8px;border-radius:6px;overflow:hidden;display:flex;background:#E5E7EB;margin-bottom:14px}
 
 /* FORM REGISTRO */
@@ -176,6 +177,13 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .btn-del-pedido:hover{color:#EF4444}
 .btn-zerar-caixa{display:block;width:100%;margin-top:8px;padding:6px;background:none;border:1px solid #E5E7EB;border-radius:8px;font-size:11px;color:#D1D5DB;cursor:pointer;transition:all .15s}
 .btn-zerar-caixa:hover{border-color:#EF4444;color:#EF4444}
+.origem-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.btn-origem{padding:8px 6px;border-radius:8px;border:2px solid #D1D5DB;font-size:11px;font-weight:700;cursor:pointer;background:white;color:#6B7280;transition:all .15s;text-align:center}
+.btn-origem:hover{border-color:#9CA3AF;background:#F9FAFB}
+.btn-origem.active-pedido{background:#EFF6FF;color:#1D4ED8;border-color:#1D4ED8}
+.btn-origem.active-caixa{background:#F0FDF4;color:#16A34A;border-color:#16A34A;box-shadow:0 0 0 2px rgba(22,163,74,.15)}
+.badge-orig-caixa{font-size:9px;font-weight:700;background:#F0FDF4;color:#16A34A;border-radius:8px;padding:1px 5px;margin-left:4px;vertical-align:middle}
+.stat-incr{background:#F0FDF4;color:#16A34A}
 
 /* ACOES */
 .acoes-gerais{display:flex;gap:10px;padding:0 20px 24px;flex-wrap:wrap}
@@ -236,7 +244,6 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 <!-- ABAS -->
 <div class="tabs">
   <button class="tab-btn active" onclick="setTab('acompanhamento')">📊 Acompanhamento</button>
-  <button class="tab-btn" onclick="setTab('caixas')">👤 Gerenciar Caixas</button>
   <div style="margin-left:auto;display:flex;align-items:center;padding:0 12px;gap:8px">
     <span id="syncStatus" style="font-size:11px;color:#16A34A">● Sheets conectado</span>
   </div>
@@ -431,38 +438,6 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 
 </div><!-- /tab-acompanhamento -->
 
-<!-- ===== ABA GERENCIAR CAIXAS ===== -->
-<div id="tab-caixas" class="tab-content">
-  <div class="cadastro-caixas">
-    <h2>👤 Gerenciar Caixas</h2>
-    <div class="aviso-cadastro">
-      ⚠️ As caixas são salvas por ER. Selecione o ER desejado na aba Acompanhamento antes de editar.
-    </div>
-
-    <!-- Info ER atual -->
-    <div style="background:var(--azul-claro);border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:11px;color:var(--vd-cor);font-weight:700;margin-bottom:2px">ER SELECIONADO</div>
-        <div style="font-size:15px;font-weight:800;color:var(--azul-escuro)" id="cxErAtualLabel">—</div>
-      </div>
-      <div style="margin-left:auto">
-        <span id="cxErBadge" class="badge-tipo badge-vd">🏬 Venda Direta</span>
-      </div>
-    </div>
-
-    <div style="font-size:12px;font-weight:700;color:var(--cinza-texto);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">
-      Caixas cadastradas neste ER
-    </div>
-
-    <div class="caixas-lista" id="caixasLista"></div>
-
-    <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-      <button class="btn-add-caixa" onclick="adicionarCaixaForm()">+ Adicionar Caixa</button>
-      <button class="btn-salvar-caixas" onclick="salvarCaixas()">✔ Salvar Alterações</button>
-    </div>
-  </div>
-</div>
-
 <!-- ===== ABA CONFIGURAÇÕES ===== -->
 
 <div class="rodape">Canal VD Mossoró · Grupo Boticário · <span id="rodapeHora"></span></div>
@@ -539,10 +514,10 @@ function setTab(tab) {
       (tab==='config' && txt.includes('config'))
     );
   });
-  ['acompanhamento','caixas','config'].forEach(t=>{
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+  ['acompanhamento'].forEach(t=>{
+    const el = document.getElementById('tab-'+t);
+    if(el) el.classList.toggle('active', t===tab);
   });
-  if (tab==='caixas') renderCaixasForm();
 }
 
 // ====================================================
@@ -551,15 +526,21 @@ function setTab(tab) {
 function chave(er, data) { return `vd_${er}_${data}`; }
 function chaveCaixas(er) { return `vd_caixas_${er}`; }
 
-function getCaixasER(er) {
-  const raw = localStorage.getItem(chaveCaixas(er));
-  if (raw) return JSON.parse(raw);
-  if (er === '19595') return CAIXAS_DEFAULT_19595.map(c=>({...c}));
-  return [{id:'cx1',nome:'Caixa 1'},{id:'cx2',nome:'Caixa 2'}];
-}
-
-function salvarCaixasER(er, caixas) {
-  localStorage.setItem(chaveCaixas(er), JSON.stringify(caixas));
+function carregarCaixasSheets(er, callback) {
+  const cbName = 'vdcx_' + Date.now();
+  const timer = setTimeout(() => {
+    delete window[cbName];
+    callback([]);
+  }, 10000);
+  window[cbName] = function(data) {
+    clearTimeout(timer);
+    delete window[cbName];
+    callback((data.status === 'ok' && data.caixas) ? data.caixas : []);
+  };
+  const script = document.createElement('script');
+  script.src = `${SCRIPT_URL}?action=getCaixas&er=${er}&callback=${cbName}`;
+  script.onerror = () => { clearTimeout(timer); delete window[cbName]; callback([]); };
+  document.body.appendChild(script);
 }
 
 function carregarEstado(er, data) {
@@ -572,12 +553,12 @@ function salvarEstado() {
   localStorage.setItem(chave(erAtual, estado.data), JSON.stringify(estado));
 }
 
-function estadoInicial(er, data) {
+function estadoInicial(er, data, caixasNomes) {
   const info = ER_INFO[er] || {nome:er};
   return {
     data, er, loja: info.nome,
     metaMakePct: 39, metaCabeloPct: 40, metaMultiPct: 75,
-    caixas: getCaixasER(er).map(c=>({...c, pedidos:[]}))
+    caixas: (caixasNomes||[]).map((nome,i)=>({id:'cx_sheets_'+i, nome, pedidos:[]}))
   };
 }
 
@@ -590,8 +571,7 @@ function inicializar() {
   const labelHoje = document.getElementById('labelDataHoje');
   if (labelHoje) labelHoje.textContent = fData(hoje);
   // Carrega URL do script salva
-  carregarDia(erAtual, hoje);
-  renderizar();
+  carregarDia(erAtual, hoje, renderizar);
   setInterval(atualizarRelogio, 1000);
   atualizarRelogio();
   atualizarBadgeER(erAtual);
@@ -599,11 +579,26 @@ function inicializar() {
 
 function dataHoje() { return new Date().toISOString().split('T')[0]; }
 
-function carregarDia(er, data) {
+function carregarDia(er, data, callback) {
   const salvo = carregarEstado(er, data);
-  estado = salvo || estadoInicial(er, data);
-  if (!salvo) salvarEstado();
-  // Migra defaults antigos (30/20) para os novos (39/40/75)
+  if (salvo) {
+    estado = salvo;
+    migrateEstado();
+    if (callback) callback();
+    return;
+  }
+  // Nenhum estado salvo — busca caixas da planilha
+  mostrarLoadingCaixas(true);
+  carregarCaixasSheets(er, (nomes) => {
+    mostrarLoadingCaixas(false);
+    estado = estadoInicial(er, data, nomes);
+    salvarEstado();
+    migrateEstado();
+    if (callback) callback();
+  });
+}
+
+function migrateEstado() {
   if (!estado.metaMakePct || estado.metaMakePct === 30) estado.metaMakePct = 39;
   if (!estado.metaCabeloPct || estado.metaCabeloPct === 20) estado.metaCabeloPct = 40;
   if (!estado.metaMultiPct) estado.metaMultiPct = 75;
@@ -613,13 +608,20 @@ function carregarDia(er, data) {
   document.getElementById('metaMulti').value = estado.metaMultiPct;
 }
 
+function mostrarLoadingCaixas(show) {
+  const grid = document.getElementById('gridCaixas');
+  if (!grid) return;
+  if (show) {
+    grid.innerHTML = '<div class="card-loading">⏳ Carregando caixas da planilha…</div>';
+  }
+}
+
 function trocarER() {
   const er = document.getElementById('selectER').value;
   erAtual = er;
   atualizarBadgeER(er);
   atualizarInfoER(er);
-  carregarDia(er, dataHoje());
-  renderizar();
+  carregarDia(er, dataHoje(), renderizar);
 }
 
 function atualizarBadgeER(er) {
@@ -673,6 +675,7 @@ function criarCard(caixa) {
   const nCombo = caixa.pedidos.filter(p=>p.make&&p.cabelo&&p.multimarca).length;
   const nMultiSolo = caixa.pedidos.filter(p=>p.multimarca&&!p.make&&!p.cabelo).length;
   const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
+  const nIncrCaixa = caixa.pedidos.filter(p=>p.origem==='caixa').length;
   const pMake = total ? Math.round(caixa.pedidos.filter(p=>p.make).length/total*100) : 0;
   const pCabelo = total ? Math.round(caixa.pedidos.filter(p=>p.cabelo).length/total*100) : 0;
   const pMulti = total ? Math.round(caixa.pedidos.filter(p=>p.multimarca).length/total*100) : 0;
@@ -691,6 +694,7 @@ function criarCard(caixa) {
         <div class="stat-item stat-cabelo"><span class="val">${pCabelo}%</span>💆 Cabelo</div>
         <div class="stat-item stat-multi"><span class="val">${pMulti}%</span>🏷️ Multi</div>
         <div class="stat-item stat-combo"><span class="val">${nCombo}</span>💎 Combo</div>
+        <div class="stat-item stat-incr"><span class="val">${nIncrCaixa}</span>✨ Incr.</div>
       </div>
       <div class="barra-caixa">
         <div class="barra-seg seg-make" style="width:${wM}%"></div>
@@ -716,6 +720,11 @@ function criarCard(caixa) {
             <span class="ico">💎</span>Combo Diamante
           </button>
         </div>
+        <div class="fl" style="margin-top:4px">Como veio este pedido?</div>
+        <div class="origem-row">
+          <button class="btn-origem active-pedido" id="orig-pedido-${caixa.id}" onclick="setOrigem('${caixa.id}','pedido')">📦 Já veio com os itens</button>
+          <button class="btn-origem" id="orig-caixa-${caixa.id}" onclick="setOrigem('${caixa.id}','caixa')">✨ Incrementei no caixa</button>
+        </div>
         <button class="btn-registrar" onclick="registrarPedido('${caixa.id}')">✔ Registrar Pedido</button>
       </div>
       <div class="historico" id="hist-${caixa.id}">${renderHistorico(caixa)}</div>
@@ -732,7 +741,7 @@ function renderHistorico(caixa) {
     return `<div class="historico-item">
       <span class="historico-hora">${p.hora}</span>
       <span class="historico-num">${p.numPedido||'—'}</span>
-      <span class="badge-hist ${tipo}">${lbl[tipo]}</span>
+      <span class="badge-hist ${tipo}">${lbl[tipo]}${p.origem==='caixa'?'<span class="badge-orig-caixa">✨ incr.</span>':''}</span>
       <button class="btn-del-pedido" onclick="deletarPedido('${caixa.id}','${p.id}')" title="Apagar pedido">✕</button>
     </div>`;
   }).join('');
@@ -742,6 +751,7 @@ function renderHistorico(caixa) {
 // TOGGLE / REGISTRO
 // ====================================================
 const toggleState = {};
+const origemState = {}; // 'pedido' | 'caixa'
 
 function toggleIncr(id, tipo) {
   if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
@@ -772,6 +782,14 @@ function syncBtnEstado(id) {
   if(bd) bd.className='btn-toggle'+(isCombo?' active-combo':'');
 }
 
+function setOrigem(id, val) {
+  origemState[id] = val;
+  const bp = document.getElementById(`orig-pedido-${id}`);
+  const bc = document.getElementById(`orig-caixa-${id}`);
+  if(bp) bp.className = 'btn-origem' + (val==='pedido'?' active-pedido':'');
+  if(bc) bc.className = 'btn-origem' + (val==='caixa'?' active-caixa':'');
+}
+
 function registrarPedido(id) {
   const ts = toggleState[id]||{make:false,cabelo:false,multimarca:false};
   const numPedido = (document.getElementById(`numped-${id}`).value||'').trim();
@@ -790,10 +808,13 @@ function registrarPedido(id) {
     tipo = partes.length ? partes.join('+') : 'Sem incrementação';
   }
 
-  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo, multimarca:ts.multimarca});
+  const origem = origemState[id] || 'pedido';
+  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo, multimarca:ts.multimarca, origem});
   toggleState[id]={make:false,cabelo:false,multimarca:false};
+  origemState[id]='pedido';
   document.getElementById(`numped-${id}`).value='';
   syncBtnEstado(id);
+  setOrigem(id, 'pedido');
   salvarEstado();
 
   const old = document.getElementById(`card-${id}`);
@@ -814,6 +835,7 @@ function registrarPedido(id) {
     cabelo: ts.cabelo,
     multimarca: ts.multimarca,
     incrementacao: tipo,
+    origem: origem === 'caixa' ? 'Incrementado no Caixa' : 'Já veio no Pedido',
   });
 }
 
@@ -922,69 +944,6 @@ function atualizarRanking() {
       </div>
       <span class="rk-score">${d.score}%</span>
     </div>`).join('');
-}
-
-// ====================================================
-// GERENCIAR CAIXAS
-// ====================================================
-let caixasEditando = [];
-
-function renderCaixasForm() {
-  caixasEditando = getCaixasER(erAtual).map(c=>({...c}));
-  if(estado) caixasEditando = estado.caixas.map(c=>({id:c.id,nome:c.nome}));
-  // Atualiza label do ER na aba
-  const info = ER_INFO[erAtual]||{nome:erAtual,tipo:'vd'};
-  document.getElementById('cxErAtualLabel').textContent = `${erAtual} — ${info.nome}`;
-  const badge = document.getElementById('cxErBadge');
-  badge.className = 'badge-tipo';
-  if(info.tipo==='hub'){badge.classList.add('badge-hub');badge.textContent='🔵 HUB';}
-  else if(info.tipo==='hibrida'){badge.classList.add('badge-hibrida');badge.textContent='🟣 Híbrida';}
-  else{badge.classList.add('badge-vd');badge.textContent='🏬 Venda Direta';}
-  renderListaCaixas();
-}
-
-function renderListaCaixas() {
-  const lista = document.getElementById('caixasLista');
-  const er = erAtual;
-  const info = ER_INFO[er]||{nome:er};
-  lista.innerHTML = caixasEditando.map((c,i)=>`
-    <div class="caixa-row">
-      <span class="caixa-row-er">ER ${er}</span>
-      <span style="font-size:12px;color:#9CA3AF;min-width:20px;font-weight:700">${i+1}</span>
-      <input type="text" value="${c.nome}" id="cx-nome-${i}" placeholder="Nome da caixa" style="flex:1;border:1.5px solid var(--borda);border-radius:8px;padding:7px 11px;font-size:14px;font-weight:600">
-      <button class="btn-remover-caixa" onclick="removerCaixaForm(${i})">Remover</button>
-    </div>`).join('');
-}
-
-function adicionarCaixaForm() {
-  const n = caixasEditando.length+1;
-  caixasEditando.push({id:'cx_'+Date.now(), nome:'Caixa '+n});
-  renderListaCaixas();
-}
-
-function removerCaixaForm(i) {
-  if(!confirm('Remover esta caixa? Os pedidos dela serão perdidos.')) return;
-  caixasEditando.splice(i,1);
-  renderListaCaixas();
-}
-
-function salvarCaixas() {
-  caixasEditando.forEach((c,i)=>{
-    const inp = document.getElementById(`cx-nome-${i}`);
-    if(inp) c.nome = inp.value.trim()||c.nome;
-  });
-  salvarCaixasER(erAtual, caixasEditando);
-  if(estado){
-    const novasCaixas = caixasEditando.map(c=>{
-      const existe = estado.caixas.find(ec=>ec.id===c.id);
-      return existe ? {...existe, nome:c.nome} : {...c, pedidos:[]};
-    });
-    estado.caixas = novasCaixas;
-    salvarEstado();
-    renderizar();
-  }
-  showToast('✔ Caixas salvas!');
-  setTab('acompanhamento');
 }
 
 // ====================================================
