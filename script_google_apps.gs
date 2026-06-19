@@ -17,6 +17,7 @@ const CABECALHO = [
   'Hora do Pedido',
   'Com Make',
   'Com Cabelo',
+  'Com Multimarca',
   'Tipo de Incrementação',
   'Meta Make (%)',
   'Meta Cabelo (%)',
@@ -37,6 +38,8 @@ function doGet(e) {
       resultado = registrarPedido(params);
     } else if (action === 'zerar') {
       resultado = zerarRegistros(params);
+    } else if (action === 'deletar') {
+      resultado = deletarPedido(params);
     } else if (action === 'ping') {
       resultado = { status: 'ok', mensagem: 'Conexão estabelecida com sucesso!' };
     } else if (action === 'debug') {
@@ -86,9 +89,10 @@ function garantirAba() {
     aba.setColumnWidth(8, 100);  // Hora Pedido
     aba.setColumnWidth(9, 100);  // Com Make
     aba.setColumnWidth(10, 100); // Com Cabelo
-    aba.setColumnWidth(11, 160); // Tipo Incrementação
-    aba.setColumnWidth(12, 110); // Meta Make
-    aba.setColumnWidth(13, 110); // Meta Cabelo
+    aba.setColumnWidth(11, 120); // Com Multimarca
+    aba.setColumnWidth(12, 160); // Tipo Incrementação
+    aba.setColumnWidth(13, 110); // Meta Make
+    aba.setColumnWidth(14, 110); // Meta Cabelo
   }
 
   return aba;
@@ -115,6 +119,7 @@ function registrarPedido(p) {
     p.hora          || '',
     p.make === 'true' ? 'SIM' : 'NÃO',
     p.cabelo === 'true' ? 'SIM' : 'NÃO',
+    p.multimarca === 'true' ? 'SIM' : 'NÃO',
     p.incrementacao || '',
     p.metaMake      || '',
     p.metaCabelo    || '',
@@ -127,15 +132,39 @@ function registrarPedido(p) {
   const range = aba.getRange(ultimaLinha, 1, 1, CABECALHO.length);
 
   const tipo = p.incrementacao || '';
-  if (tipo === 'Make+Cabelo') {
+  if (tipo.includes('Make') && tipo.includes('Cabelo')) {
     range.setBackground('#EAD1FA');
-  } else if (tipo === 'Make') {
+  } else if (tipo.includes('Multimarca')) {
+    range.setBackground('#CCFBF1');
+  } else if (tipo.includes('Make')) {
     range.setBackground('#FCE4D6');
-  } else if (tipo === 'Cabelo') {
+  } else if (tipo.includes('Cabelo')) {
     range.setBackground('#E2EFDA');
   }
 
   return { status: 'ok', mensagem: 'Pedido registrado na planilha.' };
+}
+
+// ----------------------------------------------------------------
+// Deleta um pedido específico pelo ID
+// ----------------------------------------------------------------
+function deletarPedido(p) {
+  const aba = garantirAba();
+  const pedidoId = p.pedidoId || '';
+
+  if (!pedidoId) {
+    return { status: 'erro', mensagem: 'ID do pedido é obrigatório para deletar.' };
+  }
+
+  const dados = aba.getDataRange().getValues();
+  for (let i = dados.length - 1; i >= 1; i--) {
+    if (String(dados[i][0]) === pedidoId) {
+      aba.deleteRow(i + 1);
+      return { status: 'ok', mensagem: `Pedido ${pedidoId} removido.` };
+    }
+  }
+
+  return { status: 'erro', mensagem: `Pedido ${pedidoId} não encontrado.` };
 }
 
 // ----------------------------------------------------------------

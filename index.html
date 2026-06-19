@@ -10,6 +10,7 @@
   --make-cor:#C55A11;--make-fundo:#FCE4D6;
   --cabelo-cor:#375623;--cabelo-fundo:#E2EFDA;
   --ambos-cor:#7030A0;--ambos-fundo:#EAD1FA;
+  --multi-cor:#0F766E;--multi-fundo:#CCFBF1;
   --hub-cor:#0EA5E9;--hub-fundo:#E0F2FE;
   --vd-cor:#1D4ED8;--vd-fundo:#DBEAFE;
   --hibrida-cor:#5B21B6;--hibrida-fundo:#EDE9FE;
@@ -133,6 +134,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .stat-make{background:var(--make-fundo);color:var(--make-cor)}
 .stat-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
 .stat-ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+.stat-multi{background:var(--multi-fundo);color:var(--multi-cor)}
 
 .barra-caixa{height:8px;border-radius:6px;overflow:hidden;display:flex;background:#E5E7EB;margin-bottom:14px}
 
@@ -143,28 +145,32 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 .input-pedido:focus{outline:none;border-color:var(--azul-medio);background:white}
 
 /* BOTÕES INCREMENTAÇÃO — GRANDES */
-.toggles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
-.btn-toggle{padding:14px 8px;border-radius:10px;border:2.5px solid #D1D5DB;font-size:13px;font-weight:700;cursor:pointer;background:white;color:#6B7280;transition:all .15s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.btn-toggle{padding:12px 8px;border-radius:10px;border:2.5px solid #D1D5DB;font-size:13px;font-weight:700;cursor:pointer;background:white;color:#6B7280;transition:all .15s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
 .btn-toggle .ico{font-size:22px;line-height:1}
 .btn-toggle:hover{border-color:#9CA3AF;background:#F9FAFB}
 .btn-toggle.active-make{background:var(--make-fundo);color:var(--make-cor);border-color:var(--make-cor);box-shadow:0 0 0 3px rgba(197,90,17,.15)}
 .btn-toggle.active-cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor);border-color:var(--cabelo-cor);box-shadow:0 0 0 3px rgba(55,86,35,.15)}
 .btn-toggle.active-ambos{background:var(--ambos-fundo);color:var(--ambos-cor);border-color:var(--ambos-cor);box-shadow:0 0 0 3px rgba(112,48,160,.15)}
+.btn-toggle.active-multi{background:var(--multi-fundo);color:var(--multi-cor);border-color:var(--multi-cor);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
 
 .btn-registrar{width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--azul-escuro),var(--azul-medio));color:white;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .15s;letter-spacing:.3px}
 .btn-registrar:hover{opacity:.88}
 
 /* HISTÓRICO */
-.historico{max-height:150px;overflow-y:auto;margin-top:12px;padding-top:4px}
-.historico-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--borda);font-size:12px}
+.historico{max-height:160px;overflow-y:auto;margin-top:12px;padding-top:4px}
+.historico-item{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--borda);font-size:12px}
 .historico-item:last-child{border-bottom:none}
-.historico-hora{color:#9CA3AF;font-size:11px;min-width:38px}
-.historico-num{color:var(--azul-escuro);font-weight:700;min-width:70px;font-size:11px;font-family:monospace}
-.badge-hist{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+.historico-hora{color:#9CA3AF;font-size:11px;min-width:36px}
+.historico-num{color:var(--azul-escuro);font-weight:700;min-width:60px;font-size:11px;font-family:monospace}
+.badge-hist{padding:2px 7px;border-radius:12px;font-size:10px;font-weight:700;flex:1}
 .badge-hist.make{background:var(--make-fundo);color:var(--make-cor)}
 .badge-hist.cabelo{background:var(--cabelo-fundo);color:var(--cabelo-cor)}
 .badge-hist.ambos{background:var(--ambos-fundo);color:var(--ambos-cor)}
+.badge-hist.multi{background:var(--multi-fundo);color:var(--multi-cor)}
 .badge-hist.sem{background:#F3F4F6;color:#9CA3AF}
+.btn-del-pedido{background:none;border:none;color:#D1D5DB;cursor:pointer;font-size:14px;padding:0 2px;line-height:1;flex-shrink:0;transition:color .15s}
+.btn-del-pedido:hover{color:#EF4444}
 .btn-zerar-caixa{display:block;width:100%;margin-top:8px;padding:6px;background:none;border:1px solid #E5E7EB;border-radius:8px;font-size:11px;color:#D1D5DB;cursor:pointer;transition:all .15s}
 .btn-zerar-caixa:hover{border-color:#EF4444;color:#EF4444}
 
@@ -241,7 +247,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
   <div class="seletor-bar">
     <div class="field">
       <label>📅 Data</label>
-      <input type="date" id="inputData">
+      <div id="labelDataHoje" style="font-size:14px;font-weight:700;color:var(--azul-escuro);padding:7px 0"></div>
     </div>
     <div class="field">
       <label>🏪 ER / Loja</label>
@@ -329,7 +335,7 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       <h2>📈 Resultado Geral</h2>
       <span class="data-label" id="labelDataGeral"></span>
     </div>
-    <div class="cards-totais">
+    <div class="cards-totais" style="grid-template-columns:repeat(5,1fr)">
       <div class="card-total ct-total">
         <span class="num" id="gtTotal">0</span>
         <div class="lbl">Pedidos Totais</div>
@@ -337,18 +343,23 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
       </div>
       <div class="card-total ct-make">
         <span class="num" id="gtMake">0</span>
-        <div class="lbl">💄 Com Make</div>
+        <div class="lbl">💄 Make</div>
         <div class="pct" id="gtMakePct">0%</div>
       </div>
       <div class="card-total ct-cabelo">
         <span class="num" id="gtCabelo">0</span>
-        <div class="lbl">💆 Com Cabelo</div>
+        <div class="lbl">💆 Cabelo</div>
         <div class="pct" id="gtCabeloPct">0%</div>
       </div>
       <div class="card-total ct-ambos">
         <span class="num" id="gtAmbos">0</span>
-        <div class="lbl">💎 Make + Cabelo</div>
+        <div class="lbl">💎 Make+Cab.</div>
         <div class="pct" id="gtAmbosPct">0%</div>
+      </div>
+      <div class="card-total" style="background:var(--multi-fundo);border:2px solid var(--multi-cor)15">
+        <span class="num" id="gtMulti" style="color:var(--multi-cor)">0</span>
+        <div class="lbl" style="color:var(--multi-cor)">🏷️ Multimarca</div>
+        <div class="pct" id="gtMultiPct" style="color:var(--multi-cor)">0%</div>
       </div>
     </div>
     <div class="barra-geral">
@@ -400,7 +411,6 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
   <div class="acoes-gerais">
     <button class="btn-acao btn-wpp" onclick="copiarWhatsApp()">📋 Copiar Resumo WhatsApp</button>
     <button class="btn-acao btn-xlsx" onclick="exportarExcel()">📊 Exportar Planilha</button>
-    <button class="btn-acao btn-zerar" onclick="zerarTudo()">🗑 Zerar Tudo</button>
   </div>
 
 </div><!-- /tab-acompanhamento -->
@@ -599,9 +609,9 @@ function estadoInicial(er, data) {
 // ====================================================
 function inicializar() {
   const hoje = dataHoje();
-  const inp = document.getElementById('inputData');
-  inp.value = hoje;
-  inp.addEventListener('change', () => mudarData(inp.value));
+  // Exibe data de hoje como texto fixo (sem seletor)
+  const labelHoje = document.getElementById('labelDataHoje');
+  if (labelHoje) labelHoje.textContent = fData(hoje);
   // Carrega URL do script salva
   SCRIPT_URL = localStorage.getItem('vd_script_url') || '';
   atualizarStatusSync();
@@ -613,20 +623,6 @@ function inicializar() {
 }
 
 function dataHoje() { return new Date().toISOString().split('T')[0]; }
-
-function mudarData(data) {
-  const salvo = carregarEstado(erAtual, data);
-  if (salvo) { estado = salvo; }
-  else {
-    if (confirm(`Sem dados para ${fData(data)}. Iniciar novo acompanhamento?`)) {
-      estado = estadoInicial(erAtual, data);
-      salvarEstado();
-    } else { document.getElementById('inputData').value = estado.data; return; }
-  }
-  document.getElementById('metaMake').value = estado.metaMakePct || 30;
-  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 20;
-  renderizar();
-}
 
 function carregarDia(er, data) {
   const salvo = carregarEstado(er, data);
@@ -693,7 +689,8 @@ function criarCard(caixa) {
   const nMake = caixa.pedidos.filter(p=>p.make&&!p.cabelo).length;
   const nCabelo = caixa.pedidos.filter(p=>p.cabelo&&!p.make).length;
   const nAmbos = caixa.pedidos.filter(p=>p.make&&p.cabelo).length;
-  const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo).length;
+  const nMulti = caixa.pedidos.filter(p=>p.multimarca).length;
+  const nSem = caixa.pedidos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
   const pMake = total ? Math.round(caixa.pedidos.filter(p=>p.make).length/total*100) : 0;
   const pCabelo = total ? Math.round(caixa.pedidos.filter(p=>p.cabelo).length/total*100) : 0;
   const wM = total?nMake/total*100:0, wC=total?nCabelo/total*100:0, wA=total?nAmbos/total*100:0, wS=total?nSem/total*100:100;
@@ -710,6 +707,7 @@ function criarCard(caixa) {
         <div class="stat-item stat-make"><span class="val">${pMake}%</span>💄 Make</div>
         <div class="stat-item stat-cabelo"><span class="val">${pCabelo}%</span>💆 Cabelo</div>
         <div class="stat-item stat-ambos"><span class="val">${nAmbos}</span>💎 Ambos</div>
+        <div class="stat-item stat-multi"><span class="val">${nMulti}</span>🏷️ Multi</div>
       </div>
       <div class="barra-caixa">
         <div class="barra-seg seg-make" style="width:${wM}%"></div>
@@ -731,6 +729,9 @@ function criarCard(caixa) {
           <button class="btn-toggle" id="tambos-${caixa.id}" onclick="toggleAmbos('${caixa.id}')">
             <span class="ico">💎</span>Ambos
           </button>
+          <button class="btn-toggle" id="tmulti-${caixa.id}" onclick="toggleIncr('${caixa.id}','multimarca')">
+            <span class="ico">🏷️</span>Multimarca
+          </button>
         </div>
         <button class="btn-registrar" onclick="registrarPedido('${caixa.id}')">✔ Registrar Pedido</button>
       </div>
@@ -743,12 +744,13 @@ function criarCard(caixa) {
 function renderHistorico(caixa) {
   if (!caixa.pedidos.length) return '<div style="font-size:12px;color:#9CA3AF;text-align:center;padding:12px">Nenhum pedido registrado</div>';
   return [...caixa.pedidos].reverse().map(p=>{
-    const tipo = p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':'sem';
-    const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💎 Ambos',sem:'Sem incr.'};
+    const tipo = p.make&&p.cabelo?'ambos':p.make?'make':p.cabelo?'cabelo':p.multimarca?'multi':'sem';
+    const lbl = {make:'💄 Make',cabelo:'💆 Cabelo',ambos:'💎 Ambos',multi:'🏷️ Multimarca',sem:'Sem incr.'};
     return `<div class="historico-item">
       <span class="historico-hora">${p.hora}</span>
       <span class="historico-num">${p.numPedido||'—'}</span>
       <span class="badge-hist ${tipo}">${lbl[tipo]}</span>
+      <button class="btn-del-pedido" onclick="deletarPedido('${caixa.id}','${p.id}')" title="Apagar pedido">✕</button>
     </div>`;
   }).join('');
 }
@@ -759,13 +761,14 @@ function renderHistorico(caixa) {
 const toggleState = {};
 
 function toggleIncr(id, tipo) {
-  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false};
+  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
   toggleState[id][tipo] = !toggleState[id][tipo];
+  // Se ativou make+cabelo individualmente, reflete no ambos
   syncBtnEstado(id);
 }
 
 function toggleAmbos(id) {
-  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false};
+  if (!toggleState[id]) toggleState[id]={make:false,cabelo:false,multimarca:false};
   const ligado = toggleState[id].make && toggleState[id].cabelo;
   toggleState[id].make = !ligado;
   toggleState[id].cabelo = !ligado;
@@ -773,26 +776,33 @@ function toggleAmbos(id) {
 }
 
 function syncBtnEstado(id) {
-  const s = toggleState[id]||{make:false,cabelo:false};
+  const s = toggleState[id]||{make:false,cabelo:false,multimarca:false};
   const bm = document.getElementById(`tmake-${id}`);
   const bc = document.getElementById(`tcabelo-${id}`);
   const ba = document.getElementById(`tambos-${id}`);
+  const bx = document.getElementById(`tmulti-${id}`);
   if(bm) bm.className='btn-toggle'+(s.make?' active-make':'');
   if(bc) bc.className='btn-toggle'+(s.cabelo?' active-cabelo':'');
   if(ba) ba.className='btn-toggle'+(s.make&&s.cabelo?' active-ambos':'');
+  if(bx) bx.className='btn-toggle'+(s.multimarca?' active-multi':'');
 }
 
 function registrarPedido(id) {
-  const ts = toggleState[id]||{make:false,cabelo:false};
+  const ts = toggleState[id]||{make:false,cabelo:false,multimarca:false};
   const numPedido = (document.getElementById(`numped-${id}`).value||'').trim();
   const agora = new Date();
   const hora = agora.toTimeString().substring(0,5);
   const caixa = estado.caixas.find(c=>c.id===id);
   const pedidoId = Date.now().toString();
-  const tipo = ts.make&&ts.cabelo?'Make+Cabelo':ts.make?'Make':ts.cabelo?'Cabelo':'Sem incrementação';
 
-  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo});
-  toggleState[id]={make:false,cabelo:false};
+  const partes = [];
+  if(ts.make) partes.push('Make');
+  if(ts.cabelo) partes.push('Cabelo');
+  if(ts.multimarca) partes.push('Multimarca');
+  const tipo = partes.length ? partes.join('+') : 'Sem incrementação';
+
+  caixa.pedidos.push({id:pedidoId, numPedido, hora, make:ts.make, cabelo:ts.cabelo, multimarca:ts.multimarca});
+  toggleState[id]={make:false,cabelo:false,multimarca:false};
   document.getElementById(`numped-${id}`).value='';
   syncBtnEstado(id);
   salvarEstado();
@@ -813,32 +823,36 @@ function registrarPedido(id) {
     hora,
     make: ts.make,
     cabelo: ts.cabelo,
+    multimarca: ts.multimarca,
     incrementacao: tipo,
     metaMake: estado.metaMakePct||30,
     metaCabelo: estado.metaCabeloPct||20,
   });
 }
 
+function deletarPedido(caixaId, pedidoId) {
+  const caixa = estado.caixas.find(c=>c.id===caixaId);
+  if(!caixa) return;
+  caixa.pedidos = caixa.pedidos.filter(p=>p.id!==pedidoId);
+  salvarEstado();
+  const old = document.getElementById(`card-${caixaId}`);
+  old.replaceWith(criarCard(caixa));
+  atualizarPainelGeral();
+  atualizarRanking();
+  sheetsDeletar({ pedidoId, er: estado.er, dataAcomp: fDataBR(estado.data) });
+}
+
 function zerarCaixa(id) {
-  if(!confirm('Zerar pedidos desta caixa?')) return;
+  if(!confirm('Zerar todos os pedidos desta caixa?')) return;
   const caixa = estado.caixas.find(c=>c.id===id);
-  // Chama zerar no Sheets pelos IDs dos pedidos desta caixa
-  const ids = caixa.pedidos.map(p=>p.id);
+  const nomeCaixa = caixa.nome;
   caixa.pedidos=[];
   salvarEstado();
   const old = document.getElementById(`card-${id}`);
   old.replaceWith(criarCard(estado.caixas.find(c=>c.id===id)));
   atualizarPainelGeral();
   atualizarRanking();
-  if(ids.length) sheetsZerar({ er: estado.er, dataAcomp: fDataBR(estado.data), caixaNome: caixa.nome });
-}
-
-function zerarTudo() {
-  if(!confirm('Zerar TODOS os pedidos de TODAS as caixas?\n\nOs registros também serão removidos do Google Sheets.')) return;
-  estado.caixas.forEach(c=>c.pedidos=[]);
-  salvarEstado();
-  renderizar();
-  sheetsZerar({ er: estado.er, dataAcomp: fDataBR(estado.data) });
+  sheetsZerar({ er: estado.er, dataAcomp: fDataBR(estado.data), caixaNome: nomeCaixa });
 }
 
 // ====================================================
@@ -847,10 +861,11 @@ function zerarTudo() {
 function atualizarPainelGeral() {
   const todos = estado.caixas.flatMap(c=>c.pedidos);
   const total = todos.length;
-  const nMake=todos.filter(p=>p.make&&!p.cabelo).length;
-  const nCabelo=todos.filter(p=>p.cabelo&&!p.make).length;
+  const nMake=todos.filter(p=>p.make&&!p.cabelo&&!p.multimarca).length;
+  const nCabelo=todos.filter(p=>p.cabelo&&!p.make&&!p.multimarca).length;
   const nAmbos=todos.filter(p=>p.make&&p.cabelo).length;
-  const nSem=todos.filter(p=>!p.make&&!p.cabelo).length;
+  const nMulti=todos.filter(p=>p.multimarca).length;
+  const nSem=todos.filter(p=>!p.make&&!p.cabelo&&!p.multimarca).length;
   const tMake=todos.filter(p=>p.make).length;
   const tCabelo=todos.filter(p=>p.cabelo).length;
   const pct=v=>total?Math.round(v/total*100):0;
@@ -859,9 +874,11 @@ function atualizarPainelGeral() {
   document.getElementById('gtMake').textContent=tMake;
   document.getElementById('gtCabelo').textContent=tCabelo;
   document.getElementById('gtAmbos').textContent=nAmbos;
+  document.getElementById('gtMulti').textContent=nMulti;
   document.getElementById('gtMakePct').textContent=pct(tMake)+'%';
   document.getElementById('gtCabeloPct').textContent=pct(tCabelo)+'%';
   document.getElementById('gtAmbosPct').textContent=pct(nAmbos)+'%';
+  document.getElementById('gtMultiPct').textContent=pct(nMulti)+'%';
   document.getElementById('bsMake').style.width=pct(nMake)+'%';
   document.getElementById('bsCabelo').style.width=pct(nCabelo)+'%';
   document.getElementById('bsAmbos').style.width=pct(nAmbos)+'%';
@@ -890,8 +907,9 @@ function atualizarRanking() {
     const t=c.pedidos.length;
     const m=c.pedidos.filter(p=>p.make).length;
     const cab=c.pedidos.filter(p=>p.cabelo).length;
-    const score=t?Math.round((m+cab)/t/2*100):0;
-    return {nome:c.nome, total:t, make:m, cabelo:cab, score};
+    const multi=c.pedidos.filter(p=>p.multimarca).length;
+    const score=t?Math.round((m+cab+multi)/t/3*100):0;
+    return {nome:c.nome, total:t, make:m, cabelo:cab, multi, score};
   }).sort((a,b)=>b.score-a.score||b.total-a.total);
 
   const totalGeral = estado.caixas.flatMap(c=>c.pedidos).length;
@@ -906,6 +924,7 @@ function atualizarRanking() {
         <span class="rk-chip rk-total">${d.total} ped.</span>
         <span class="rk-chip rk-make">💄 ${d.total?Math.round(d.make/d.total*100):0}%</span>
         <span class="rk-chip rk-cabelo">💆 ${d.total?Math.round(d.cabelo/d.total*100):0}%</span>
+        <span class="rk-chip" style="background:var(--multi-fundo);color:var(--multi-cor)">🏷️ ${d.total?Math.round(d.multi/d.total*100):0}%</span>
       </div>
       <span class="rk-score">${d.score}%</span>
     </div>`).join('');
@@ -1102,6 +1121,13 @@ function sheetsZerar(payload) {
   );
 }
 
+function sheetsDeletar(payload) {
+  sheetsCall(
+    {action:'deletar', ...payload},
+    `Removendo pedido ${payload.pedidoId}...`
+  );
+}
+
 let ultimoLogId = 0;
 function adicionarLogSync(tipo, msg) {
   const log = document.getElementById('syncLog');
@@ -1132,18 +1158,21 @@ function copiarWhatsApp() {
   const todos=estado.caixas.flatMap(c=>c.pedidos);
   const total=todos.length;
   const pct=(v,t)=>t?Math.round(v/t*100):0;
-  const tM=todos.filter(p=>p.make).length, tC=todos.filter(p=>p.cabelo).length, tA=todos.filter(p=>p.make&&p.cabelo).length;
+  const tM=todos.filter(p=>p.make).length, tC=todos.filter(p=>p.cabelo).length;
+  const tA=todos.filter(p=>p.make&&p.cabelo).length, tMu=todos.filter(p=>p.multimarca).length;
   let txt=`📦 *ACOMPANHAMENTO VD MOSSORÓ — ${fDataBR(estado.data)}*\n`;
   txt+=`🏪 *${estado.loja}* (ER ${estado.er})\n\n`;
   txt+=`*RESULTADO GERAL*\n`;
   txt+=`Total de pedidos: *${total}*\n`;
   txt+=`💄 Com Make: *${tM} (${pct(tM,total)}%)*\n`;
   txt+=`💆 Com Cabelo: *${tC} (${pct(tC,total)}%)*\n`;
-  txt+=`💎 Make + Cabelo: *${tA}*\n\n`;
+  txt+=`💎 Make + Cabelo: *${tA}*\n`;
+  txt+=`🏷️ Multimarca: *${tMu} (${pct(tMu,total)}%)*\n\n`;
   txt+=`*POR CAIXA*\n`;
   estado.caixas.forEach(c=>{
-    const t=c.pedidos.length, m=c.pedidos.filter(p=>p.make).length, cab=c.pedidos.filter(p=>p.cabelo).length;
-    txt+=`👤 *${c.nome}*: ${t} pedidos | Make ${pct(m,t)}% | Cabelo ${pct(cab,t)}%\n`;
+    const t=c.pedidos.length, m=c.pedidos.filter(p=>p.make).length;
+    const cab=c.pedidos.filter(p=>p.cabelo).length, mu=c.pedidos.filter(p=>p.multimarca).length;
+    txt+=`👤 *${c.nome}*: ${t} pedidos | Make ${pct(m,t)}% | Cabelo ${pct(cab,t)}% | Multi ${pct(mu,t)}%\n`;
   });
   txt+=`\n_Canal VD Mossoró_`;
   navigator.clipboard.writeText(txt).then(()=>showToast('📋 Resumo copiado!'));
@@ -1153,11 +1182,15 @@ function copiarWhatsApp() {
 // EXPORT CSV
 // ====================================================
 function exportarExcel() {
-  const linhas=[['Data','ER','Loja','Caixa','Nº Pedido','Hora','Make','Cabelo','Incrementação']];
+  const linhas=[['Data','ER','Loja','Caixa','Nº Pedido','Hora','Make','Cabelo','Multimarca','Incrementação']];
   estado.caixas.forEach(cx=>{
     cx.pedidos.forEach(p=>{
-      const tipo=p.make&&p.cabelo?'Make+Cabelo':p.make?'Make':p.cabelo?'Cabelo':'Sem incrementação';
-      linhas.push([fDataBR(estado.data),estado.er,estado.loja,cx.nome,p.numPedido||'',p.hora,p.make?'SIM':'NÃO',p.cabelo?'SIM':'NÃO',tipo]);
+      const partes=[];
+      if(p.make) partes.push('Make');
+      if(p.cabelo) partes.push('Cabelo');
+      if(p.multimarca) partes.push('Multimarca');
+      const tipo=partes.length?partes.join('+'):'Sem incrementação';
+      linhas.push([fDataBR(estado.data),estado.er,estado.loja,cx.nome,p.numPedido||'',p.hora,p.make?'SIM':'NÃO',p.cabelo?'SIM':'NÃO',p.multimarca?'SIM':'NÃO',tipo]);
     });
   });
   const csv='﻿'+linhas.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(';')).join('\n');
