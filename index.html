@@ -645,9 +645,14 @@ function carregarDia(er, data) {
   const salvo = carregarEstado(er, data);
   estado = salvo || estadoInicial(er, data);
   if (!salvo) salvarEstado();
-  document.getElementById('metaMake').value = estado.metaMakePct || 39;
-  document.getElementById('metaCabelo').value = estado.metaCabeloPct || 40;
-  document.getElementById('metaMulti').value = estado.metaMultiPct || 75;
+  // Migra defaults antigos (30/20) para os novos (39/40/75)
+  if (!estado.metaMakePct || estado.metaMakePct === 30) estado.metaMakePct = 39;
+  if (!estado.metaCabeloPct || estado.metaCabeloPct === 20) estado.metaCabeloPct = 40;
+  if (!estado.metaMultiPct) estado.metaMultiPct = 75;
+  salvarEstado();
+  document.getElementById('metaMake').value = estado.metaMakePct;
+  document.getElementById('metaCabelo').value = estado.metaCabeloPct;
+  document.getElementById('metaMulti').value = estado.metaMultiPct;
 }
 
 function trocarER() {
