@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Acompanhamento Make-Cabelos-Multimarcas</title>
-<meta property="og:title" content="Acompanhamento Make-Cabelos-Multimarcas">
+<title>[DEV] Acompanhamento Make-Cabelos-Multimarcas</title>
+<meta property="og:title" content="[DEV] Acompanhamento Make-Cabelos-Multimarcas">
 <meta property="og:description" content="Acompanhamento de pedidos VD — Make, Cabelo e Multimarca em tempo real">
 <meta property="og:type" content="website">
 <style>
@@ -264,6 +264,9 @@ header .sub{font-size:11px;opacity:.8;margin-top:2px}
 </head>
 <body>
 
+<div style="background:#F59E0B;color:#78350F;text-align:center;font-size:12px;font-weight:700;padding:5px;letter-spacing:.5px">
+  ⚠️ AMBIENTE DE DESENVOLVIMENTO — dados de teste, não afeta a produção
+</div>
 <header>
   <div>
     <div class="sub">Canal VD · Grupo Boticário</div>
@@ -549,7 +552,8 @@ const CAIXAS_DEFAULT_19595 = [
 
 let estado = null;
 let erAtual = '19595';
-let SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYaq-sI5na6yvZsLnbNhdwyOOzZAtoXQsp3umL5lekQID0ol6mvWUvRNaUUyAufGWT/exec';
+// ⚠️ DEV — substitua pela URL do Apps Script da planilha de desenvolvimento
+let SCRIPT_URL = 'COLE_AQUI_URL_DO_APPS_SCRIPT_DEV';
 
 // ====================================================
 // TABS
